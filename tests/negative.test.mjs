@@ -70,6 +70,31 @@ await rejects('unsafe shared SVG is rejected', space => {
 }, /unsafe SVG content/);
 await rejects('missing HTML accessibility structure is rejected', space => { fs.writeFileSync(file(space, 'simulations/sim-alpha/index.html'), '<html><body>No structure</body></html>'); }, /HTML must include doctype/);
 
+test('symbolic-link assets cannot escape a content directory', t => {
+  const space = workspace();
+  try {
+    const outside = path.join(space.directory, 'outside.txt');
+    const link = file(space, 'simulations/sim-alpha/linked.txt');
+    fs.writeFileSync(outside, 'outside content\n');
+    try {
+      fs.symlinkSync(outside, link, 'file');
+    } catch (error) {
+      if (error.code === 'EPERM' || error.code === 'EACCES') {
+        t.skip('Local platform does not permit creating test symlinks; Linux CI executes this assertion.');
+        return;
+      }
+      throw error;
+    }
+    json(space, 'simulations/sim-alpha/simulation.json', value => { value.assets.push('linked.txt'); });
+    assert.throws(
+      () => compileContent({ repositoryRoot: root, contentRoot: space.content, outputRoot: space.output, sourceCommit: sha }),
+      /symbolic links are prohibited/
+    );
+  } finally {
+    fs.rmSync(space.directory, { recursive: true, force: true });
+  }
+});
+
 await rejects('course parent cycle is rejected', space => {
   const secondDirectory = file(space, 'courses/course-second');
   fs.mkdirSync(secondDirectory, { recursive: true });

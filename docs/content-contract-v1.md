@@ -58,6 +58,7 @@ The v1 validator rejects:
 - `eval`/dynamic functions;
 - undeclared network APIs when `capabilities.network_origins` is empty;
 - unsafe paths, missing/undeclared files, credential signatures, and JavaScript syntax errors.
+- symbolic links, so declared assets cannot resolve outside their content directory.
 
 `network_origins` defaults to an empty list and accepts HTTPS origins only. Adding a non-empty capability is structural/sensitive review work and does not itself change the Content Worker CSP until the release architecture explicitly supports it.
 

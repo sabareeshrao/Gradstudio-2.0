@@ -24,6 +24,7 @@ function walk(directory) {
   const output = [];
   for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
     const full = path.join(directory, entry.name);
+    if (entry.isSymbolicLink()) throw new Error(`${full}: symbolic links are prohibited in content source`);
     if (entry.isDirectory()) output.push(...walk(full));
     else output.push(full);
   }
