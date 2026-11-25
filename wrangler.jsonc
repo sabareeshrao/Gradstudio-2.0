@@ -1,0 +1,47 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "gradstudio-content-local",
+  "main": "worker/src/index.js",
+  "compatibility_date": "2026-11-24",
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./dist-static",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "vars": {
+    "ENVIRONMENT": "local",
+    "CONTENT_FRAME_ANCESTORS": "http://127.0.0.1:4173 http://localhost:4173"
+  },
+  "env": {
+    "development": {
+      "name": "gradstudio-content-dev",
+      "workers_dev": true,
+      "preview_urls": true,
+      "assets": {
+        "directory": "./dist-static",
+        "binding": "ASSETS",
+        "run_worker_first": true
+      },
+      "vars": {
+        "ENVIRONMENT": "development",
+        "CONTENT_FRAME_ANCESTORS": "http://127.0.0.1:4173 http://localhost:4173"
+      }
+    },
+    "staging": {
+      "name": "gradstudio-content-staging",
+      "workers_dev": true,
+      "preview_urls": true,
+      "assets": {
+        "directory": "./dist-static",
+        "binding": "ASSETS",
+        "run_worker_first": true
+      },
+      "vars": {
+        "ENVIRONMENT": "staging",
+        "CONTENT_FRAME_ANCESTORS": "https://staging-origin-not-configured.invalid"
+      }
+    }
+  }
+}

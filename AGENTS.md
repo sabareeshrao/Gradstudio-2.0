@@ -76,6 +76,17 @@ The intended deployment is an independent content Worker using Cloudflare Worker
 
 Pull-request validation must not receive production secrets. Deployment must use trusted commits, least-privilege environment-specific credentials, concurrency control, immutable revisions, staging verification, and rollback. Production remains blocked until the private tracker's security and readiness gates pass and the founder explicitly authorizes it.
 
+Delivery source paths:
+
+- `scripts/build-static-bundle.mjs` and `scripts/lib/static-bundle.mjs` assemble deployable public files.
+- `config/static-assets-policy.json` is the conservative repository bundle budget.
+- `worker/src/index.js` applies cache, CORS, CSP, range, health, and safe-error behavior around the `ASSETS` binding.
+- `wrangler.jsonc` contains local, development, and staging names only. Do not add a production environment before the approved cutover phase.
+- `.github/workflows/content-validation.yml` is credential-free PR validation.
+- `.github/workflows/content-staging.yml` is trusted-main staging automation and must remain gated by the GitHub `staging` environment variable `CLOUDFLARE_STAGING_ENABLED`.
+
+Do not weaken `sandbox` or add `allow-same-origin`. Content contract v1 deliberately enforces `connect-src 'none'`; a non-empty `network_origins` manifest is sensitive/structural and remains blocked at runtime until an approved per-simulation CSP contract is implemented.
+
 ## Documentation maintenance
 
 Update README.md and the relevant contract documentation whenever layout, schema, administration semantics, delivery behavior, or repository ownership changes. Keep examples synthetic until the founder requests the first real new content. Do not introduce legacy examples that could later be mistaken for approved content.

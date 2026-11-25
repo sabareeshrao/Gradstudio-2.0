@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.gradstudio.org/content/catalog-v1.schema.json",
+  "title": "GradStudio public content catalog v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "contract",
+    "schema_version",
+    "release_id",
+    "source",
+    "compiler",
+    "content_base_url",
+    "shared_assets",
+    "categories",
+    "courses",
+    "sections",
+    "simulations",
+    "catalog_sha256"
+  ],
+  "properties": {
+    "$schema": { "type": "string", "format": "uri" },
+    "contract": { "const": "gradstudio-content-catalog/v1" },
+    "schema_version": { "const": 1 },
+    "release_id": { "type": "string", "pattern": "^rel-[0-9a-f]{12}-[0-9a-f]{12}$" },
+    "source": { "$ref": "#/$defs/source" },
+    "compiler": { "$ref": "#/$defs/compiler" },
+    "content_base_url": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "shared_assets": { "type": "array", "items": { "type": "object" } },
+    "categories": { "type": "array", "items": { "type": "object" } },
+    "courses": { "type": "array", "items": { "type": "object" } },
+    "sections": { "type": "array", "items": { "type": "object" } },
+    "simulations": { "type": "array", "items": { "$ref": "#/$defs/simulation" } },
+    "catalog_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit"],
+      "properties": {
+        "repository": { "const": "sabareeshrao/Gradstudio-2.0" },
+        "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "compiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "@gradstudio/content-compiler" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+      }
+    },
+    "simulation": {
+      "type": "object",
+      "required": ["id", "course_id", "section_id", "title", "slug", "order", "status", "entrypoint", "release_path"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^sim-[a-z0-9][a-z0-9-]{2,63}$" },
+        "course_id": { "type": "string" },
+        "section_id": { "type": "string" },
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "order": { "type": "integer" },
+        "status": { "const": "published" },
+        "entrypoint": { "type": "string" },
+        "release_path": { "type": "string", "pattern": "^releases/rel-[0-9a-f]{12}-[0-9a-f]{12}/content/" }
+      }
+    }
+  }
+}

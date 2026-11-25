@@ -1,0 +1,55 @@
+# Content deployment operations
+
+## Trust boundary
+
+Pull-request validation has read-only repository permission and no deployment secret. Staging deployment runs only from the exact current `main` commit, in the GitHub `staging` environment, when `CLOUDFLARE_STAGING_ENABLED` equals `true`. The workflow repeats the remote-main comparison immediately before deployment and serializes deployments.
+
+The staging workflow has no production Worker name, route, zone, environment, or credential. `gradstudio-content-staging` must live in the separate **GradStudio Non-Production** Cloudflare account.
+
+## Required GitHub environment configuration
+
+Create the repository environment `staging` with:
+
+- environment secret `CLOUDFLARE_API_TOKEN` — steady-state token scoped to the separate non-production account and Workers Scripts edit only;
+- environment variable `CLOUDFLARE_ACCOUNT_ID` — separate non-production account ID;
+- environment variable `CONTENT_PUBLIC_ORIGIN` — exact HTTPS origin of `gradstudio-content-staging`, with no trailing slash;
+- environment variable `CONTENT_FRAME_ANCESTORS` — space-separated exact HTTPS application-staging origins;
+- environment variable `CLOUDFLARE_STAGING_ENABLED` — keep `false` until the account, token, origin, and safeguards are verified; then set `true`.
+
+Do not store the token as a repository variable or put it in `wrangler.jsonc`. Do not reuse the production account ID or any production token.
+
+## Automated staging release
+
+On a trusted push to `main`, the workflow:
+
+1. verifies the checkout is still the exact remote-main commit;
+2. validates non-production origin/account inputs without printing the token;
+3. installs locked dependencies and runs all validation;
+4. retrieves the previous trusted staging artifact when available;
+5. builds an immutable bundle for the exact source commit and retains up to two prior releases;
+6. runs a credential-free Wrangler packaging proof;
+7. stores the complete bundle as 90-day GitHub evidence;
+8. rechecks remote main;
+9. deploys only `gradstudio-content-staging`;
+10. verifies health, source commit, bundle digest, active release, and catalog contract.
+
+A failed gate blocks deployment. Fork pull requests never execute this workflow and never receive the environment secret.
+
+## Routine and sensitive changes
+
+Routine content changes are manifest/source edits that stay within existing schemas, capabilities, budgets, and published parent relationships. Once staging and production automation are authorized, validated routine changes may deploy automatically.
+
+The following remain sensitive and require explicit review/authorization: workflow or Wrangler changes; token/permission/account/origin changes; schema or compiler semantics; Worker/CSP/sandbox/network capability changes; operational data access; production routes; initial production cutover; and destructive derived-content cleanup.
+
+## Rollback
+
+Before production cutover, rollback must be tested in staging. Two mechanisms are available:
+
+1. Cloudflare Worker version rollback, which restores the previous Worker/Static Assets version.
+2. Redeploying a retained, provenance-verified GitHub bundle artifact.
+
+After rollback, run `scripts/verify-deployment.mjs` using the rolled-back commit and digest. Confirm both `/health/v1` and `/catalog/v1/active.json`, then run the browser matrix. Do not guess a release ID or hand-edit live assets.
+
+## Manual staging evidence
+
+Record for each staging proof: workflow run URL, source commit, active/retained release IDs, bundle digest, file count/bytes, largest file, upload duration, cache/range/header observations, browser/accessibility results, rollback result, and any Cloudflare limits or cost signals.
