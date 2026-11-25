@@ -16,14 +16,14 @@ GitHub is the authoring source of truth. Production will use a deployed, immutab
 
 ## Current status
 
-The versioned source schemas, deterministic compiler, synthetic security/operation fixtures, and read-only pull-request validation are implemented on a review branch. No real or legacy educational content, deployment pipeline, or production deployment has been created.
+The versioned source schemas, deterministic compiler, synthetic security/operation fixtures, immutable Static Assets bundle builder, minimal Content Worker, credential-free packaging proof, and read-only pull-request validation are implemented on review branches. A staging-only deployment workflow is present but remains disabled until the separate non-production Cloudflare account and GitHub `staging` environment are configured. No real or legacy educational content and no Cloudflare deployment have been created.
 
-Before publishing content, the approved implementation must also establish:
+Before production publishing, the approved implementation must still establish:
 
-1. isolated preview/staging and the Content Worker proof;
-2. browser/accessibility tests beyond the current source/security fixtures;
+1. isolated Cloudflare staging and measured Content Worker behavior;
+2. browser/accessibility tests against the deployed origin;
 3. measured Workers Static Assets versus R2 selection;
-4. controlled deployment, rollback, provenance, and release verification.
+4. tested staging rollback and founder-authorized initial production cutover.
 
 ## Intended source layout
 
@@ -55,5 +55,7 @@ ChatGPT/Codex connected to GitHub will be the founder's everyday content adminis
 Use unpublish/retire plus Git history for normal removal. Never place credentials, customer records, student progress, payments, private analytics, access tokens, or administrative secrets in this public repository.
 
 Read [AGENTS.md](AGENTS.md) before making changes. For daily natural-language operations, follow [docs/prompt-operations.md](docs/prompt-operations.md). Validate locally with `npm ci && npm run validate`.
+
+The delivery implementation is documented in [docs/static-assets-worker.md](docs/static-assets-worker.md), and staging/release controls are documented in [docs/deployment-operations.md](docs/deployment-operations.md).
 
 No production deployment is authorized by this README or by a content commit.

@@ -7,14 +7,20 @@
   "scripts": {
     "build": "node scripts/compile-content.mjs --content content --output dist --source-commit 0000000000000000000000000000000000000000",
     "build:fixture": "node scripts/compile-content.mjs --content tests/fixtures/valid/content --output dist --source-commit 0000000000000000000000000000000000000000",
+    "build:static": "node scripts/build-static-bundle.mjs --content content --output dist-static --source-commit 0000000000000000000000000000000000000000",
+    "build:static:fixture": "node scripts/build-static-bundle.mjs --content tests/fixtures/valid/content --output dist-static --source-commit 0000000000000000000000000000000000000000",
     "test": "node --test tests/*.test.mjs",
-    "validate": "npm test && npm run build:fixture && node scripts/verify-reproducible.mjs && node scripts/scan-repository.mjs"
+    "validate": "npm test && npm run build:fixture && npm run build:static:fixture && node scripts/verify-reproducible.mjs && node scripts/scan-repository.mjs",
+    "worker:dry-run": "node scripts/run-wrangler-dry-run.mjs"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12.0"
   },
   "dependencies": {
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1"
+  },
+  "devDependencies": {
+    "wrangler": "4.168.0"
   }
 }

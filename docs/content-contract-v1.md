@@ -78,6 +78,8 @@ Outputs:
 
 The release ID is derived from source commit plus deterministic source digest. Independent builds of the same source/commit must be byte-identical. Generated `dist/` is a CI/release artifact, not tracked authoring source.
 
+`scripts/build-static-bundle.mjs` assembles the deployable `dist-static/` tree from those compiler outputs. It publishes only records and files whose status is `published`, writes the mutable pointer at `/catalog/v1/active.json`, writes an immutable catalog/assets tree at `/releases/<release-id>/`, copies public schemas, and creates a deterministic deployment manifest. Draft, unpublished, and retired simulation files are not placed in the public bundle. The internal release manifest and change-impact report remain CI evidence rather than public endpoints.
+
 `catalog_sha256` hashes the canonical catalog payload before that field is added, avoiding a self-referential digest. `catalog_file_sha256` in the release manifest hashes the final catalog bytes.
 
 ## Version policy

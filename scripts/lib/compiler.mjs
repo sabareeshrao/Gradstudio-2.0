@@ -15,7 +15,7 @@ const SECRET_PATTERNS = [
   /\bAKIA[0-9A-Z]{16}\b/,
   /\bgh[pousr]_[A-Za-z0-9_]{30,}\b/,
   /\b(?:sk|rk)_(?:live|test)_[A-Za-z0-9]{16,}\b/,
-  /\bCLOUDFLARE_API_TOKEN\s*[:=]\s*[^\s<]+/i,
+  /\bCLOUDFLARE_API_TOKEN\s*[:=]\s*(?!\$\{\{)[^\s<]+/i,
   /\b(?:password|secret|access[_-]?token|api[_-]?key)\s*[:=]\s*["'][^"']{12,}["']/i
 ];
 

@@ -1,0 +1,129 @@
+name: Content staging deployment
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: content-staging
+  cancel-in-progress: false
+
+jobs:
+  staging-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    environment: staging
+    outputs:
+      enabled: ${{ steps.evaluate.outputs.enabled }}
+    steps:
+      - name: Resolve the environment-scoped staging gate
+        id: evaluate
+        shell: bash
+        env:
+          CLOUDFLARE_STAGING_ENABLED: ${{ vars.CLOUDFLARE_STAGING_ENABLED }}
+        run: |
+          if [ "$CLOUDFLARE_STAGING_ENABLED" = "true" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "enabled=false" >> "$GITHUB_OUTPUT"
+          echo "Staging deployment is disabled; no credentialed job will run." >> "$GITHUB_STEP_SUMMARY"
+
+  deploy-staging:
+    needs: staging-gate
+    if: needs.staging-gate.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: staging
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+      - name: Require an exact current main commit
+        shell: bash
+        run: |
+          git fetch --no-tags origin main
+          test "$(git rev-parse origin/main)" = "$GITHUB_SHA"
+      - name: Require isolated non-production configuration
+        shell: bash
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CONTENT_PUBLIC_ORIGIN: ${{ vars.CONTENT_PUBLIC_ORIGIN }}
+          CONTENT_FRAME_ANCESTORS: ${{ vars.CONTENT_FRAME_ANCESTORS }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CONTENT_FRAME_ANCESTORS"
+          node -e "const u=new URL(process.env.CONTENT_PUBLIC_ORIGIN); if(u.protocol!=='https:'||u.origin!==process.env.CONTENT_PUBLIC_ORIGIN||/gradstudio\\.org$/i.test(u.hostname)) throw Error('CONTENT_PUBLIC_ORIGIN must be an isolated HTTPS non-production origin')"
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Validate source and Worker
+        run: npm run validate
+      - name: Retrieve the prior staging bundle for immutable release retention
+        id: prior
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          artifact_id=""
+          while read -r candidate_artifact candidate_run; do
+            run_json="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$candidate_run")"
+            if [ "$(jq -r '.name' <<<"$run_json")" = "Content staging deployment" ] && \
+               [ "$(jq -r '.conclusion' <<<"$run_json")" = "success" ] && \
+               [ "$(jq -r '.head_branch' <<<"$run_json")" = "main" ]; then
+              artifact_id="$candidate_artifact"
+              break
+            fi
+          done < <(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=content-static-bundle-staging&per_page=20" --jq '.artifacts | map(select(.expired == false)) | sort_by(.created_at) | reverse | .[] | [.id, .workflow_run.id] | @tsv')
+          if [ -n "$artifact_id" ]; then
+            mkdir -p previous-bundle
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" > previous-bundle.zip
+            unzip -q previous-bundle.zip -d previous-bundle
+            echo "argument=--retain-from previous-bundle" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build the exact deployable bundle
+        shell: bash
+        env:
+          CONTENT_PUBLIC_ORIGIN: ${{ vars.CONTENT_PUBLIC_ORIGIN }}
+        run: node scripts/build-static-bundle.mjs --content content --output dist-static --source-commit "$GITHUB_SHA" ${{ steps.prior.outputs.argument }}
+      - name: Publish the stable-ID change impact
+        shell: bash
+        run: node scripts/write-impact-summary.mjs dist-static/deployment-manifest.json dist-static/deployment-evidence/change-impact.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Package the Worker without credentials
+        run: npm run worker:dry-run
+      - name: Preserve immutable deployment evidence
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: content-static-bundle-staging
+          path: dist-static/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Recheck main immediately before deployment
+        shell: bash
+        run: |
+          git fetch --no-tags origin main
+          test "$(git rev-parse origin/main)" = "$GITHUB_SHA"
+      - name: Deploy only to the named staging Worker
+        shell: bash
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CONTENT_FRAME_ANCESTORS: ${{ vars.CONTENT_FRAME_ANCESTORS }}
+        run: npx wrangler deploy --env staging --var "ENVIRONMENT:staging" --var "CONTENT_FRAME_ANCESTORS:$CONTENT_FRAME_ANCESTORS"
+      - name: Verify deployed commit, digest, release, and catalog
+        shell: bash
+        env:
+          CONTENT_PUBLIC_ORIGIN: ${{ vars.CONTENT_PUBLIC_ORIGIN }}
+        run: |
+          digest="$(node -p "JSON.parse(require('fs').readFileSync('dist-static/deployment-manifest.json')).bundle_digest_sha256")"
+          node scripts/verify-deployment.mjs --origin "$CONTENT_PUBLIC_ORIGIN" --source-commit "$GITHUB_SHA" --bundle-digest "$digest"

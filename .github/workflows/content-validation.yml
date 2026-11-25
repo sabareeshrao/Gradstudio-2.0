@@ -26,7 +26,19 @@ jobs:
         run: npm ci
       - name: Test schemas, compiler, security rules, and reproducibility
         run: npm run validate
-      - name: Compile the actual content library
-        run: node scripts/compile-content.mjs --content content --output dist-current --source-commit "$GITHUB_SHA"
+      - name: Compile the actual deployable Static Assets bundle
+        run: node scripts/build-static-bundle.mjs --content content --output dist-static --source-commit "$GITHUB_SHA"
+      - name: Prove the Worker and Static Assets configuration can package without credentials
+        run: npm run worker:dry-run
       - name: Audit runtime dependencies
         run: npm audit --audit-level=moderate
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: content-validation-${{ github.run_id }}
+          path: |
+            dist-static/deployment-manifest.json
+            dist-worker-dry-run/
+          if-no-files-found: warn
+          retention-days: 14
