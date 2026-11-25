@@ -7,9 +7,9 @@ import addFormats from 'ajv-formats';
 
 const CONTRACT = 'gradstudio-content-catalog/v1';
 const COMPILER = { name: '@gradstudio/content-compiler', version: '1.0.0' };
-const KINDS = ['category', 'course', 'section', 'simulation'];
-const PLURAL = { category: 'categories', course: 'courses', section: 'sections', simulation: 'simulations' };
-const MANIFEST_NAME = { category: 'category.json', course: 'course.json', section: 'section.json', simulation: 'simulation.json' };
+const KINDS = ['asset-pack', 'category', 'course', 'section', 'simulation'];
+const PLURAL = { 'asset-pack': 'shared', category: 'categories', course: 'courses', section: 'sections', simulation: 'simulations' };
+const MANIFEST_NAME = { 'asset-pack': 'asset.json', category: 'category.json', course: 'course.json', section: 'section.json', simulation: 'simulation.json' };
 const SECRET_PATTERNS = [
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,
   /\bAKIA[0-9A-Z]{16}\b/,
@@ -86,6 +86,7 @@ function formatAjv(errors = []) {
 }
 
 function parentKey(record) {
+  if (record.kind === 'asset-pack') return 'root';
   if (record.kind === 'category') return record.parent_id || 'root';
   if (record.kind === 'course') return `${record.category_id}:${record.parent_course_id || 'root'}`;
   if (record.kind === 'section') return record.course_id;
@@ -95,6 +96,7 @@ function parentKey(record) {
 function assertUniqueSiblingValues(records, field) {
   const values = new Map();
   for (const record of records) {
+    if (record[field] === undefined) continue;
     const key = `${record.kind}:${parentKey(record)}:${String(record[field]).toLowerCase()}`;
     if (values.has(key)) throw new Error(`${record.source_path}: duplicate sibling ${field} with ${values.get(key)}`);
     values.set(key, record.source_path);
@@ -188,6 +190,41 @@ function scanCss(source, record) {
   }
 }
 
+function scanSvg(source, record) {
+  if (/<script\b|\son[a-z]+\s*=|\b(?:href|src)\s*=\s*["'](?:https?:|\/\/)|javascript:/i.test(source)) {
+    throw new Error(`${record.source_path}: unsafe SVG content`);
+  }
+}
+
+function validateAssetPackFiles(record, manifestPath, contentRoot) {
+  const directory = path.dirname(manifestPath);
+  const declaredFolded = new Map();
+  for (const relative of record.files) {
+    assertSafeRelative(relative, record.source_path);
+    const lower = relative.toLowerCase();
+    if (declaredFolded.has(lower)) throw new Error(`${record.source_path}: case-colliding shared assets ${relative} and ${declaredFolded.get(lower)}`);
+    declaredFolded.set(lower, relative);
+  }
+  const existing = walk(directory)
+    .filter(file => path.basename(file) !== 'asset.json')
+    .map(file => path.relative(directory, file).split(path.sep).join('/'));
+  for (const relative of existing) if (!record.files.includes(relative)) throw new Error(`${record.source_path}: undeclared shared file ${relative}`);
+  for (const relative of record.files) if (!existing.includes(relative)) throw new Error(`${record.source_path}: declared shared file missing ${relative}`);
+
+  let total = 0;
+  return existing.sort().map(relative => {
+    const full = path.join(directory, ...relative.split('/'));
+    const buffer = fs.readFileSync(full);
+    total += buffer.length;
+    if (buffer.length > 5 * 1024 * 1024 || total > 25 * 1024 * 1024) throw new Error(`${record.source_path}: shared asset size budget exceeded`);
+    const source = buffer.toString('utf8');
+    scanSecrets(source, `${record.source_path}:${relative}`);
+    if (relative.endsWith('.css')) scanCss(source, record);
+    if (relative.endsWith('.svg')) scanSvg(source, record);
+    return { path: path.relative(contentRoot, full).split(path.sep).join('/'), sha256: sha256(buffer), size: buffer.length };
+  });
+}
+
 function validateSimulationFiles(record, manifestPath, contentRoot) {
   const directory = path.dirname(manifestPath);
   assertSafeRelative(record.entrypoint, record.source_path);
@@ -278,6 +315,9 @@ export function loadAndValidateContent({ repositoryRoot, contentRoot }) {
       if (course?.kind !== 'course') throw new Error(`${record.source_path}: missing course ${record.course_id}`);
       if (section?.kind !== 'section') throw new Error(`${record.source_path}: missing section ${record.section_id}`);
       if (section.course_id !== record.course_id) throw new Error(`${record.source_path}: section/course relationship mismatch`);
+      for (const assetId of record.shared_asset_ids || []) {
+        if (byId.get(assetId)?.kind !== 'asset-pack') throw new Error(`${record.source_path}: missing shared asset pack ${assetId}`);
+      }
     }
   }
 
@@ -292,12 +332,16 @@ export function loadAndValidateContent({ repositoryRoot, contentRoot }) {
     if (record.kind === 'course') ancestors.push(record.category_id, ...(record.parent_course_id ? [record.parent_course_id] : []));
     if (record.kind === 'section') ancestors.push(record.course_id);
     if (record.kind === 'simulation') ancestors.push(record.course_id, record.section_id);
+    if (record.kind === 'simulation') ancestors.push(...(record.shared_asset_ids || []));
     for (const id of ancestors) if (byId.get(id)?.status !== 'published') throw new Error(`${record.source_path}: published record has unpublished ancestor ${id}`);
   }
 
   const assets = [];
   for (const record of records.filter(record => record.kind === 'simulation')) {
     assets.push(...validateSimulationFiles(record, manifestPaths.get(record.id), contentRoot));
+  }
+  for (const record of records.filter(record => record.kind === 'asset-pack')) {
+    assets.push(...validateAssetPackFiles(record, manifestPaths.get(record.id), contentRoot));
   }
 
   records.sort((a, b) => a.kind.localeCompare(b.kind) || parentKey(a).localeCompare(parentKey(b)) || a.order - b.order || a.id.localeCompare(b.id));
@@ -309,6 +353,7 @@ function publicRecord(record, releaseId) {
   const { manifest_sha256, source_path, redirect_from = [], ...manifest } = record;
   const output = { ...manifest, source_path, manifest_sha256 };
   if (redirect_from.length) output.redirect_from = redirect_from;
+  if (record.kind === 'asset-pack') output.release_base_path = `releases/${releaseId}/content/${path.dirname(source_path)}/`;
   if (record.kind === 'simulation') output.release_path = `releases/${releaseId}/content/${path.dirname(source_path)}/${record.entrypoint}`;
   return output;
 }
@@ -351,6 +396,7 @@ export function compileContent({ repositoryRoot, contentRoot, outputRoot, source
     source: { repository: 'sabareeshrao/Gradstudio-2.0', commit: sourceCommit.toLowerCase() },
     compiler: COMPILER,
     content_base_url: `${contentBaseUrl.replace(/\/$/, '')}/releases/${releaseId}/`,
+    shared_assets: published.filter(item => item.kind === 'asset-pack').map(item => publicRecord(item, releaseId)),
     categories: published.filter(item => item.kind === 'category').map(item => publicRecord(item, releaseId)),
     courses: published.filter(item => item.kind === 'course').map(item => publicRecord(item, releaseId)),
     sections: published.filter(item => item.kind === 'section').map(item => publicRecord(item, releaseId)),

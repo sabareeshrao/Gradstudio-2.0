@@ -9,6 +9,9 @@ content/
   categories/<cat-id>/category.json
   courses/<course-id>/course.json
   sections/<section-id>/section.json
+  shared/<asset-id>/
+    asset.json
+    <declared public assets>
   simulations/<sim-id>/
     simulation.json
     index.html
@@ -27,8 +30,11 @@ Every manifest has `schema_version: 1`, a `kind`, immutable globally unique `id`
 | Course | `course-` | `category_id`, optional `parent_course_id` | `schemas/course-v1.schema.json` |
 | Section | `section-` | `course_id` | `schemas/section-v1.schema.json` |
 | Simulation | `sim-` | `course_id`, `section_id` | `schemas/simulation-v1.schema.json` |
+| Shared asset pack | `asset-` | none; simulations use `shared_asset_ids` | `schemas/asset-pack-v1.schema.json` |
 
 References always use IDs. Category/course parent cycles, missing parents, section/course mismatch, duplicate sibling slugs/orders, duplicate IDs, and unsupported schema versions fail validation.
+
+Courses, sections and simulations carry explicit `access.display` metadata: `open` or `locked`. Locked items require an `entitlement_key`. This metadata controls the GradStudio user experience; it does not make public source/assets secret or authorize a user. Application APIs remain responsible for entitlements and operational access decisions.
 
 ## Publication lifecycle
 

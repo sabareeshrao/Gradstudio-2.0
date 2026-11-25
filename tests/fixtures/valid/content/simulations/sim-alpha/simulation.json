@@ -9,8 +9,10 @@
   "description": "Test-only simulation fixture.",
   "order": 1,
   "status": "published",
+  "access": { "display": "open" },
   "entrypoint": "index.html",
   "assets": ["app.js", "styles.css"],
+  "shared_asset_ids": ["asset-synthetic-theme"],
   "capabilities": {
     "network_origins": []
   }

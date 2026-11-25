@@ -7,5 +7,6 @@
   "slug": "synthetic-alpha",
   "description": "Test-only section.",
   "order": 1,
-  "status": "published"
+  "status": "published",
+  "access": { "display": "open" }
 }

@@ -38,6 +38,7 @@ test('valid synthetic content compiles with immutable provenance and no legacy c
     const result = compile(space);
     assert.equal(result.catalog.contract, 'gradstudio-content-catalog/v1');
     assert.equal(result.catalog.source.commit, sha);
+    assert.deepEqual(result.catalog.shared_assets.map(item => item.id), ['asset-synthetic-theme']);
     assert.deepEqual(result.catalog.simulations.map(item => item.id), ['sim-alpha', 'sim-beta']);
     assert.ok(result.catalog.simulations.every(item => item.release_path.includes(result.catalog.release_id)));
     assert.equal(JSON.stringify(result.catalog).includes('legacy'), false);

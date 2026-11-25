@@ -7,5 +7,6 @@
   "slug": "synthetic-beta",
   "description": "Test-only section.",
   "order": 2,
-  "status": "published"
+  "status": "published",
+  "access": { "display": "locked", "entitlement_key": "synthetic.beta" }
 }

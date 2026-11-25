@@ -34,6 +34,7 @@ content/
   categories/<stable-id>/category.json
   courses/<stable-id>/course.json
   sections/<stable-id>/section.json
+  shared/<stable-id>/asset.json
   simulations/
     <stable-simulation-id>/
       simulation.json

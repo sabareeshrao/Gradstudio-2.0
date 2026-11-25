@@ -7,5 +7,6 @@
   "slug": "synthetic-course",
   "description": "Test-only course.",
   "order": 1,
-  "status": "published"
+  "status": "published",
+  "access": { "display": "open" }
 }

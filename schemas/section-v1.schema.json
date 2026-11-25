@@ -4,7 +4,7 @@
   "title": "GradStudio section manifest v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "kind", "id", "course_id", "title", "slug", "order", "status"],
+  "required": ["schema_version", "kind", "id", "course_id", "title", "slug", "order", "status", "access"],
   "properties": {
     "schema_version": { "const": 1 },
     "kind": { "const": "section" },
@@ -15,6 +15,17 @@
     "description": { "type": "string", "maxLength": 2000 },
     "order": { "type": "integer", "minimum": 0, "maximum": 1000000 },
     "status": { "enum": ["draft", "published", "unpublished", "retired"] },
+    "access": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display"],
+      "properties": {
+        "display": { "enum": ["open", "locked"] },
+        "entitlement_key": { "type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$", "maxLength": 100 }
+      },
+      "if": { "properties": { "display": { "const": "locked" } } },
+      "then": { "properties": { "entitlement_key": {} }, "required": ["entitlement_key"] }
+    },
     "redirect_from": {
       "type": "array",
       "uniqueItems": true,
