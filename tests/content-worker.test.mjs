@@ -75,6 +75,13 @@ test('health reports immutable deployment provenance without exposing configurat
     file_count: manifest.file_count
   });
   assert.equal(response.headers.get('Cache-Control'), 'no-store');
+
+  const privateManifest = await handleRequest(new Request('https://content.example/deployment-manifest.json'), environment());
+  assert.equal(privateManifest.status, 404);
+  assert.deepEqual(await privateManifest.json(), { error: 'content_not_found', path: '/deployment-manifest.json' });
+  const privateIndex = await handleRequest(new Request('https://content.example/deployment-evidence/source-index.json'), environment());
+  assert.equal(privateIndex.status, 404);
+  assert.deepEqual(await privateIndex.json(), { error: 'content_not_found', path: '/deployment-evidence/source-index.json' });
 });
 
 test('unknown assets, unsupported methods, HEAD, and missing binding fail safely', async () => {

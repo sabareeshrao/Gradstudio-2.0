@@ -22,6 +22,9 @@ export async function handleRequest(request, env) {
   }
 
   if (url.pathname === "/health/v1") return healthResponse(request, env);
+  if (url.pathname === DEPLOYMENT_MANIFEST_PATH || url.pathname.startsWith("/deployment-evidence/")) {
+    return json({ error: "content_not_found", path: url.pathname }, 404, {}, request.method === "HEAD");
+  }
 
   const assetResponse = await env.ASSETS.fetch(request);
   if (assetResponse.status === 404) return json({ error: "content_not_found", path: url.pathname }, 404, {}, request.method === "HEAD");
@@ -99,7 +102,7 @@ function secureAssetResponse(response, pathname, env, headOnly) {
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), clipboard-read=(), clipboard-write=()");
   headers.set("Accept-Ranges", "bytes");
 
-  if (pathname === ACTIVE_CATALOG_PATH || pathname === DEPLOYMENT_MANIFEST_PATH) {
+  if (pathname === ACTIVE_CATALOG_PATH) {
     headers.set("Cache-Control", "no-cache, max-age=0, must-revalidate");
   } else if (pathname.startsWith("/releases/")) {
     headers.set("Cache-Control", "public, max-age=31536000, immutable");
@@ -156,7 +159,7 @@ function parseFrameAncestors(value = "") {
 }
 
 function isPublicJsonPath(pathname) {
-  return pathname === ACTIVE_CATALOG_PATH || pathname === DEPLOYMENT_MANIFEST_PATH || pathname.endsWith(".json") || pathname === "/health/v1";
+  return pathname === ACTIVE_CATALOG_PATH || pathname.endsWith(".json") || pathname === "/health/v1";
 }
 
 function corsHeaders() {

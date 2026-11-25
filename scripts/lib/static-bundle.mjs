@@ -40,11 +40,26 @@ function copyFileVerified(source, destination, expected) {
   fs.writeFileSync(destination, buffer);
 }
 
-function copyRetainedReleases(previousBundleRoot, releasesRoot, activeReleaseId, limit) {
-  if (!previousBundleRoot || !fs.existsSync(previousBundleRoot) || limit === 0) return [];
+function readPreviousDeployment(previousBundleRoot) {
+  if (!previousBundleRoot || !fs.existsSync(previousBundleRoot)) return null;
   const manifestPath = path.join(previousBundleRoot, 'deployment-manifest.json');
-  if (!fs.existsSync(manifestPath)) return [];
+  if (!fs.existsSync(manifestPath)) return null;
   const previous = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  if (previous.contract !== 'gradstudio-content-deployment/v1' || previous.schema_version !== 1) {
+    throw new Error('previous bundle has an unsupported deployment manifest');
+  }
+  const sourceIndexPath = path.join(previousBundleRoot, 'deployment-evidence', 'source-index.json');
+  if (!fs.existsSync(sourceIndexPath)) return { manifest: previous, sourceIndex: [] };
+  const evidence = JSON.parse(fs.readFileSync(sourceIndexPath, 'utf8'));
+  if (evidence.contract !== 'gradstudio-content-source-index/v1' || evidence.schema_version !== 1 || !Array.isArray(evidence.source_index)) {
+    throw new Error('previous bundle has an unsupported source-index evidence file');
+  }
+  return { manifest: previous, sourceIndex: evidence.source_index };
+}
+
+function copyRetainedReleases(previousBundleRoot, previousDeployment, releasesRoot, activeReleaseId, limit) {
+  if (!previousBundleRoot || !previousDeployment || limit === 0) return [];
+  const previous = previousDeployment.manifest;
   const candidates = [previous.active_release_id, ...(previous.retained_release_ids || [])]
     .filter((value, index, all) => value && value !== activeReleaseId && all.indexOf(value) === index)
     .slice(0, limit);
@@ -88,7 +103,15 @@ export function buildStaticBundle({ repositoryRoot, contentRoot, outputRoot, sou
   fs.mkdirSync(compilerOutput, { recursive: true });
 
   try {
-    const compiled = compileContent({ repositoryRoot, contentRoot, outputRoot: compilerOutput, sourceCommit, contentBaseUrl });
+    const previousDeployment = readPreviousDeployment(previousBundleRoot);
+    const compiled = compileContent({
+      repositoryRoot,
+      contentRoot,
+      outputRoot: compilerOutput,
+      sourceCommit,
+      contentBaseUrl,
+      previousReleaseManifest: previousDeployment ? { source_index: previousDeployment.sourceIndex } : null
+    });
     const releaseId = compiled.releaseManifest.release_id;
     const releaseRoot = path.join(output, 'releases', releaseId);
     fs.mkdirSync(releaseRoot, { recursive: true });
@@ -116,9 +139,27 @@ export function buildStaticBundle({ repositoryRoot, contentRoot, outputRoot, sou
     fs.copyFileSync(path.join(repositoryRoot, 'schemas', 'catalog-v1.schema.json'), path.join(schemasRoot, 'catalog-v1.json'));
     for (const schema of SCHEMA_FILES) fs.copyFileSync(path.join(repositoryRoot, 'schemas', schema), path.join(schemasRoot, schema.replace('.schema', '')));
 
+    const evidenceRoot = path.join(output, 'deployment-evidence');
+    fs.mkdirSync(evidenceRoot, { recursive: true });
+    fs.writeFileSync(path.join(evidenceRoot, 'change-impact.json'), canonicalJson({
+      contract: 'gradstudio-content-impact/v1',
+      schema_version: 1,
+      source: compiled.catalog.source,
+      active_release_id: releaseId,
+      change_impact: compiled.impact
+    }));
+    fs.writeFileSync(path.join(evidenceRoot, 'source-index.json'), canonicalJson({
+      contract: 'gradstudio-content-source-index/v1',
+      schema_version: 1,
+      source: compiled.catalog.source,
+      active_release_id: releaseId,
+      source_index: compiled.releaseManifest.source_index
+    }));
+
     fs.rmSync(compilerOutput, { recursive: true, force: true });
     const retainedReleaseIds = copyRetainedReleases(
       previousBundleRoot,
+      previousDeployment,
       path.join(output, 'releases'),
       releaseId,
       policy.retained_previous_releases

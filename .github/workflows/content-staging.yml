@@ -66,6 +66,9 @@ jobs:
         env:
           CONTENT_PUBLIC_ORIGIN: ${{ vars.CONTENT_PUBLIC_ORIGIN }}
         run: node scripts/build-static-bundle.mjs --content content --output dist-static --source-commit "$GITHUB_SHA" ${{ steps.prior.outputs.argument }}
+      - name: Publish the stable-ID change impact
+        shell: bash
+        run: node scripts/write-impact-summary.mjs dist-static/deployment-manifest.json dist-static/deployment-evidence/change-impact.json >> "$GITHUB_STEP_SUMMARY"
       - name: Package the Worker without credentials
         run: npm run worker:dry-run
       - name: Preserve immutable deployment evidence

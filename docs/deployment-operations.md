@@ -27,11 +27,12 @@ On a trusted push to `main`, the workflow:
 3. installs locked dependencies and runs all validation;
 4. retrieves the previous trusted staging artifact when available;
 5. builds an immutable bundle for the exact source commit and retains up to two prior releases;
-6. runs a credential-free Wrangler packaging proof;
-7. stores the complete bundle as 90-day GitHub evidence;
-8. rechecks remote main;
-9. deploys only `gradstudio-content-staging`;
-10. verifies health, source commit, bundle digest, active release, and catalog contract.
+6. publishes a GitHub Actions summary of created, removed, updated, renamed, moved, reordered, published, unpublished, and retired stable IDs;
+7. runs a credential-free Wrangler packaging proof;
+8. stores the complete bundle, source index, and machine-readable change impact as 90-day GitHub evidence;
+9. rechecks remote main;
+10. deploys only `gradstudio-content-staging`;
+11. verifies health, source commit, bundle digest, active release, and catalog contract.
 
 A failed gate blocks deployment. Fork pull requests never execute this workflow and never receive the environment secret.
 

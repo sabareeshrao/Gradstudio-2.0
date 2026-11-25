@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { formatImpactSummary } from '../scripts/lib/impact-summary.mjs';
 import { buildStaticBundle } from '../scripts/lib/static-bundle.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -45,7 +46,7 @@ test('static bundle publishes the active and immutable catalogs with declared as
   }
 });
 
-test('draft simulation metadata and files are excluded from the public static bundle', () => {
+test('draft simulation assets are excluded while private deployment evidence retains source identity', () => {
   const space = temp('draft');
   const content = path.join(space, 'content');
   const output = path.join(space, 'dist-static');
@@ -58,7 +59,8 @@ test('draft simulation metadata and files are excluded from the public static bu
     const result = build(output, { contentRoot: content });
     assert.equal(result.catalog.simulations.some(item => item.id === 'sim-beta'), false);
     assert.equal(fs.existsSync(path.join(output, 'releases', result.catalog.release_id, 'content', 'simulations', 'sim-beta')), false);
-    assert.equal(JSON.stringify(result.deploymentManifest).includes('sim-beta'), false);
+    const sourceEvidence = JSON.parse(fs.readFileSync(path.join(output, 'deployment-evidence', 'source-index.json'), 'utf8'));
+    assert.equal(sourceEvidence.source_index.some(item => item.id === 'sim-beta' && item.status === 'draft'), true);
   } finally {
     fs.rmSync(space, { recursive: true, force: true });
   }
@@ -93,6 +95,35 @@ test('bundle retains prior immutable releases and can reactivate an exact known-
       fs.readFileSync(path.join(first, 'releases', firstResult.catalog.release_id, 'catalog.json'))
     );
     assert.ok(fs.existsSync(path.join(rolledBack, 'releases', secondResult.catalog.release_id, 'catalog.json')));
+  } finally {
+    fs.rmSync(space, { recursive: true, force: true });
+  }
+});
+
+test('deployment evidence reports human-readable changes by stable ID', () => {
+  const space = temp('impact');
+  const content = path.join(space, 'content');
+  const first = path.join(space, 'dist-first');
+  const second = path.join(space, 'dist-second');
+  fs.cpSync(fixture, content, { recursive: true });
+  const firstResult = build(first, { contentRoot: content });
+  const manifestPath = path.join(content, 'simulations', 'sim-alpha', 'simulation.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  manifest.title = 'Renamed synthetic simulation';
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  try {
+    const secondResult = build(second, {
+      contentRoot: content,
+      sourceCommit: '3333333333333333333333333333333333333333',
+      previousBundleRoot: first
+    });
+    const firstIndex = JSON.parse(fs.readFileSync(path.join(first, 'deployment-evidence', 'source-index.json'), 'utf8'));
+    const secondImpact = JSON.parse(fs.readFileSync(path.join(second, 'deployment-evidence', 'change-impact.json'), 'utf8'));
+    assert.equal(firstIndex.source_index.some(record => record.id === 'sim-alpha'), true);
+    assert.deepEqual(secondImpact.change_impact.renamed, ['sim-alpha']);
+    const summary = formatImpactSummary(secondResult.deploymentManifest, secondImpact);
+    assert.match(summary, /\| renamed \| 1 \| `sim-alpha` \|/);
+    assert.match(summary, /1 stable-ID operation\(s\) detected\./);
   } finally {
     fs.rmSync(space, { recursive: true, force: true });
   }
