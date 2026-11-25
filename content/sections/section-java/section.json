@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "section",
+  "id": "section-java",
+  "title": "Java Fundamentals",
+  "slug": "fundamentals",
+  "order": 1,
+  "status": "published",
+  "course_id": "course-java",
+  "access": {
+    "display": "open"
+  }
+}
