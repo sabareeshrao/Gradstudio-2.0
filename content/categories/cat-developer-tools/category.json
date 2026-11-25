@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "kind": "category",
+  "id": "cat-developer-tools",
+  "title": "Developer Tools & DevOps",
+  "slug": "developer-tools",
+  "order": 5,
+  "status": "published"
+}

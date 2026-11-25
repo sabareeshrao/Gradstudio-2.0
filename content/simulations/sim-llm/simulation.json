@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-llm",
+  "title": "Large Language Models (LLM)",
+  "slug": "llm",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-generative-ai",
+  "section_id": "section-generative-ai",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "script-2.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-rag-source-citations",
+  "title": "Source Citations",
+  "slug": "rag-source-citations",
+  "order": 14,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-rag-from-scratch",
+  "section_id": "section-rag-from-scratch",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}
