@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-embedding",
+  "title": "Embeddings",
+  "slug": "embedding",
+  "order": 4,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-machine-learning",
+  "section_id": "section-machine-learning",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "script-2.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

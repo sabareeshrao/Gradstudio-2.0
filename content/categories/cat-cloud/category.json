@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "kind": "category",
+  "id": "cat-cloud",
+  "title": "Cloud Computing",
+  "slug": "cloud-computing",
+  "order": 2,
+  "status": "published"
+}

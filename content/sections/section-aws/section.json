@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "section",
+  "id": "section-aws",
+  "title": "AWS Services",
+  "slug": "aws-services",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-aws"
+}
