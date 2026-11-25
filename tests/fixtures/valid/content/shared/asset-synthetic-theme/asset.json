@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "kind": "asset-pack",
+  "id": "asset-synthetic-theme",
+  "title": "Synthetic Shared Theme",
+  "order": 1,
+  "status": "published",
+  "files": ["tokens.css"]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@gradstudio/content",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Schemas, compiler, and validation for new GradStudio educational content",
+  "scripts": {
+    "build": "node scripts/compile-content.mjs --content content --output dist --source-commit 0000000000000000000000000000000000000000",
+    "build:fixture": "node scripts/compile-content.mjs --content tests/fixtures/valid/content --output dist --source-commit 0000000000000000000000000000000000000000",
+    "test": "node --test tests/*.test.mjs",
+    "validate": "npm test && npm run build:fixture && node scripts/verify-reproducible.mjs && node scripts/scan-repository.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
+  }
+}
