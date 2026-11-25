@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-kill-processes",
+  "title": "Kill Processes",
+  "slug": "kill-processes",
+  "order": 3,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-developer-tools",
+  "section_id": "section-developer-tools",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

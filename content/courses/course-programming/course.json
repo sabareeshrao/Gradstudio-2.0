@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "course",
+  "id": "course-programming",
+  "title": "Programming Fundamentals",
+  "slug": "programming-fundamentals",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "category_id": "cat-programming"
+}

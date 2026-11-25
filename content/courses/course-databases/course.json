@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "course",
+  "id": "course-databases",
+  "title": "Databases",
+  "slug": "databases",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "category_id": "cat-data"
+}

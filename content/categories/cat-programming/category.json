@@ -2,8 +2,8 @@
   "schema_version": 1,
   "kind": "category",
   "id": "cat-programming",
-  "title": "Programming",
-  "slug": "programming",
-  "order": 3,
+  "title": "Programming Fundamentals",
+  "slug": "programming-fundamentals",
+  "order": 4,
   "status": "published"
 }

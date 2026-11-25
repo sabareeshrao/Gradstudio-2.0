@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-merge-sort",
+  "title": "Merge Sort",
+  "slug": "merge-sort",
+  "order": 2,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-programming",
+  "section_id": "section-programming",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

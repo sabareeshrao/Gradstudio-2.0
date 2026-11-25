@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-postgresql",
+  "title": "PostgreSQL",
+  "slug": "postgresql",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-databases",
+  "section_id": "section-databases",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}
