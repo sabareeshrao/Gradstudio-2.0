@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "course",
+  "id": "course-rag-from-scratch",
+  "title": "RAG From Scratch",
+  "slug": "rag-from-scratch",
+  "order": 4,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "category_id": "cat-ai"
+}
