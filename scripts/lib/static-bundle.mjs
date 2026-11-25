@@ -24,8 +24,9 @@ function safeOutputRoot(repositoryRoot, outputRoot) {
   const repository = path.resolve(repositoryRoot);
   const output = path.resolve(outputRoot);
   const temporary = path.resolve(process.env.TEMP || process.env.TMP || '/tmp');
-  const inRepository = output.startsWith(`${repository}${path.sep}`) && path.basename(output).startsWith('dist');
-  const inTemporary = output.startsWith(`${temporary}${path.sep}`);
+  const allowedName = path.basename(output).startsWith('dist');
+  const inRepository = output.startsWith(`${repository}${path.sep}`) && allowedName;
+  const inTemporary = output.startsWith(`${temporary}${path.sep}`) && allowedName;
   if (!inRepository && !inTemporary) throw new Error(`refusing to replace unsafe output directory ${output}`);
   return output;
 }
