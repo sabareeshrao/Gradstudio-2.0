@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "kind": "section",
+  "id": "section-alpha",
+  "course_id": "course-synthetic",
+  "title": "Synthetic Section Alpha",
+  "slug": "synthetic-alpha",
+  "description": "Test-only section.",
+  "order": 1,
+  "status": "published"
+}

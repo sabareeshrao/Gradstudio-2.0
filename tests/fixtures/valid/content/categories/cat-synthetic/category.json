@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "kind": "category",
+  "id": "cat-synthetic",
+  "title": "Synthetic Category",
+  "slug": "synthetic-category",
+  "description": "Test-only category; not educational content.",
+  "order": 1,
+  "status": "published"
+}

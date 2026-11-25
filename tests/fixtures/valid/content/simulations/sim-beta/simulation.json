@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-beta",
+  "course_id": "course-synthetic",
+  "section_id": "section-alpha",
+  "title": "Synthetic Simulation Beta",
+  "slug": "synthetic-beta",
+  "description": "Second test-only simulation fixture.",
+  "order": 2,
+  "status": "published",
+  "entrypoint": "index.html",
+  "assets": ["app.js"],
+  "capabilities": {
+    "network_origins": []
+  }
+}

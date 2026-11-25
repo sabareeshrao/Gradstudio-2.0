@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "kind": "course",
+  "id": "course-synthetic",
+  "category_id": "cat-synthetic",
+  "title": "Synthetic Course",
+  "slug": "synthetic-course",
+  "description": "Test-only course.",
+  "order": 1,
+  "status": "published"
+}

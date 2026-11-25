@@ -1,0 +1,32 @@
+name: Content validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: content-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Test schemas, compiler, security rules, and reproducibility
+        run: npm run validate
+      - name: Compile the actual content library
+        run: node scripts/compile-content.mjs --content content --output dist-current --source-commit "$GITHUB_SHA"
+      - name: Audit runtime dependencies
+        run: npm audit --audit-level=moderate

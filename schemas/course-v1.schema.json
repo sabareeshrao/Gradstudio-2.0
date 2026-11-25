@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.gradstudio.org/content/course-v1.schema.json",
+  "title": "GradStudio course manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "id", "category_id", "title", "slug", "order", "status"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "kind": { "const": "course" },
+    "id": { "type": "string", "pattern": "^course-[a-z0-9][a-z0-9-]{2,63}$" },
+    "category_id": { "type": "string", "pattern": "^cat-[a-z0-9][a-z0-9-]{2,63}$" },
+    "parent_course_id": { "type": ["string", "null"], "pattern": "^course-[a-z0-9][a-z0-9-]{2,63}$" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 80 },
+    "description": { "type": "string", "maxLength": 2000 },
+    "order": { "type": "integer", "minimum": 0, "maximum": 1000000 },
+    "status": { "enum": ["draft", "published", "unpublished", "retired"] },
+    "redirect_from": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 20,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
+    }
+  }
+}

@@ -16,26 +16,24 @@ GitHub is the authoring source of truth. Production will use a deployed, immutab
 
 ## Current status
 
-Repository preparation is in progress. No educational content, production pipeline, or production deployment has been created yet.
+The versioned source schemas, deterministic compiler, synthetic security/operation fixtures, and read-only pull-request validation are implemented on a review branch. No real or legacy educational content, deployment pipeline, or production deployment has been created.
 
-Before adding content, the approved implementation must establish:
+Before publishing content, the approved implementation must also establish:
 
-1. versioned schemas for course, section, category, and simulation manifests;
-2. globally unique stable IDs that survive rename and move;
-3. validation for references, order, safe paths, HTML/assets, accessibility, and browser behavior;
-4. a compiled catalog and immutable release manifest;
-5. isolated preview/staging and controlled production deployment;
-6. rollback, provenance, and release verification.
+1. isolated preview/staging and the Content Worker proof;
+2. browser/accessibility tests beyond the current source/security fixtures;
+3. measured Workers Static Assets versus R2 selection;
+4. controlled deployment, rollback, provenance, and release verification.
 
 ## Intended source layout
 
-The exact schema is intentionally not finalized in this first preparation commit. The approved direction is:
+The v1 source contract is documented in [docs/content-contract-v1.md](docs/content-contract-v1.md):
 
 ~~~text
 content/
-  categories/
-  courses/
-  sections/
+  categories/<stable-id>/category.json
+  courses/<stable-id>/course.json
+  sections/<stable-id>/section.json
   simulations/
     <stable-simulation-id>/
       simulation.json
@@ -55,4 +53,6 @@ ChatGPT/Codex connected to GitHub will be the founder's everyday content adminis
 
 Use unpublish/retire plus Git history for normal removal. Never place credentials, customer records, student progress, payments, private analytics, access tokens, or administrative secrets in this public repository.
 
-Read [AGENTS.md](AGENTS.md) before making changes. No production deployment is authorized by this README or by a content commit.
+Read [AGENTS.md](AGENTS.md) before making changes. For daily natural-language operations, follow [docs/prompt-operations.md](docs/prompt-operations.md). Validate locally with `npm ci && npm run validate`.
+
+No production deployment is authorized by this README or by a content commit.
