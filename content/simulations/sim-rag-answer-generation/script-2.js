@@ -1,0 +1,2 @@
+
+(()=>{const raw=document.getElementById('raw-trim'),out=document.getElementById('trim-output');function drawTrim(){const t=raw.value.trim();out.textContent=JSON.stringify(t);document.getElementById('trim-before').textContent='Before: '+Array.from(raw.value).length+' characters';document.getElementById('trim-after').textContent='After: '+Array.from(t).length+' characters';}raw.addEventListener('input',drawTrim);drawTrim();})();
