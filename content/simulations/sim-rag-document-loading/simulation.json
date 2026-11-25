@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-rag-document-loading",
+  "title": "Knowledge Base & Document Loading",
+  "slug": "rag-document-loading",
+  "order": 2,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-rag-from-scratch",
+  "section_id": "section-rag-from-scratch",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "script-2.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

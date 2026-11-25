@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-rag-vector-storage",
+  "title": "Vector Storage",
+  "slug": "rag-vector-storage",
+  "order": 7,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-rag-from-scratch",
+  "section_id": "section-rag-from-scratch",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

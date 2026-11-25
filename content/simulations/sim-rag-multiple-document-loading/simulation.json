@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-rag-multiple-document-loading",
+  "title": "Multiple Document Loading",
+  "slug": "rag-multiple-document-loading",
+  "order": 3,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-rag-from-scratch",
+  "section_id": "section-rag-from-scratch",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "script-2.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}
