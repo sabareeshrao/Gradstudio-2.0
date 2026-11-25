@@ -4,7 +4,7 @@
   "id": "course-programming",
   "title": "Programming Fundamentals",
   "slug": "programming-fundamentals",
-  "order": 1,
+  "order": 2,
   "status": "published",
   "access": {
     "display": "open"
