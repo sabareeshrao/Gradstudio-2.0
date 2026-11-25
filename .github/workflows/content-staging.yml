@@ -54,7 +54,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          artifact_id="$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=content-static-bundle-staging&per_page=10" --jq '.artifacts | map(select(.expired == false)) | sort_by(.created_at) | reverse | .[0].id // empty')"
+          artifact_id=""
+          while read -r candidate_artifact candidate_run; do
+            run_json="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$candidate_run")"
+            if [ "$(jq -r '.name' <<<"$run_json")" = "Content staging deployment" ] && \
+               [ "$(jq -r '.conclusion' <<<"$run_json")" = "success" ] && \
+               [ "$(jq -r '.head_branch' <<<"$run_json")" = "main" ]; then
+              artifact_id="$candidate_artifact"
+              break
+            fi
+          done < <(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=content-static-bundle-staging&per_page=20" --jq '.artifacts | map(select(.expired == false)) | sort_by(.created_at) | reverse | .[] | [.id, .workflow_run.id] | @tsv')
           if [ -n "$artifact_id" ]; then
             mkdir -p previous-bundle
             gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" > previous-bundle.zip

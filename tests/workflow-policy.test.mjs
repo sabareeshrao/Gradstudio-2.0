@@ -31,6 +31,8 @@ test('staging deployment is trusted-main-only, serialized, disabled by default, 
   assert.match(staging, /group:\s*content-staging/);
   assert.match(staging, /cancel-in-progress:\s*false/);
   assert.match(staging, /git rev-parse origin\/main/);
+  assert.match(staging, /\.conclusion[^\n]+success/);
+  assert.match(staging, /\.head_branch[^\n]+main/);
   assert.match(staging, /secrets\.CLOUDFLARE_API_TOKEN/);
   assert.match(staging, /write-impact-summary\.mjs/);
   assert.match(staging, /GITHUB_STEP_SUMMARY/);

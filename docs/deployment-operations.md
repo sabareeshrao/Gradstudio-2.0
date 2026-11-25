@@ -25,7 +25,7 @@ On a trusted push to `main`, the workflow:
 1. verifies the checkout is still the exact remote-main commit;
 2. validates non-production origin/account inputs without printing the token;
 3. installs locked dependencies and runs all validation;
-4. retrieves the previous trusted staging artifact when available;
+4. retrieves the newest unexpired bundle only when its originating staging run succeeded on `main`;
 5. builds an immutable bundle for the exact source commit and retains up to two prior releases;
 6. publishes a GitHub Actions summary of created, removed, updated, renamed, moved, reordered, published, unpublished, and retired stable IDs;
 7. runs a credential-free Wrangler packaging proof;
@@ -35,6 +35,8 @@ On a trusted push to `main`, the workflow:
 11. verifies health, source commit, bundle digest, active release, and catalog contract.
 
 A failed gate blocks deployment. Fork pull requests never execute this workflow and never receive the environment secret.
+
+A retry of the same source commit reuses the prior verified change-impact evidence, excludes the active release from its own retention list, and produces the same deployment manifest and bundle digest byte-for-byte. Serialized staging concurrency plus exact remote-`main` checks before build and deployment prevent an older queued run from publishing over a newer commit.
 
 ## Routine and sensitive changes
 

@@ -129,6 +129,29 @@ test('deployment evidence reports human-readable changes by stable ID', () => {
   }
 });
 
+test('retrying the same source commit with its verified prior bundle is byte-identical', () => {
+  const space = temp('retry');
+  const first = path.join(space, 'dist-first');
+  const retry = path.join(space, 'dist-retry');
+  try {
+    const firstResult = build(first);
+    const retryResult = build(retry, { previousBundleRoot: first });
+    assert.equal(retryResult.deploymentManifest.active_release_id, firstResult.deploymentManifest.active_release_id);
+    assert.equal(retryResult.deploymentManifest.bundle_digest_sha256, firstResult.deploymentManifest.bundle_digest_sha256);
+    assert.deepEqual(retryResult.deploymentManifest.retained_release_ids, []);
+    assert.deepEqual(
+      fs.readFileSync(path.join(retry, 'deployment-manifest.json')),
+      fs.readFileSync(path.join(first, 'deployment-manifest.json'))
+    );
+    assert.deepEqual(
+      fs.readFileSync(path.join(retry, 'deployment-evidence', 'change-impact.json')),
+      fs.readFileSync(path.join(first, 'deployment-evidence', 'change-impact.json'))
+    );
+  } finally {
+    fs.rmSync(space, { recursive: true, force: true });
+  }
+});
+
 test('two static bundle builds are byte-identical', () => {
   const space = temp('reproducible');
   const first = path.join(space, 'dist-a');

@@ -49,12 +49,21 @@ function readPreviousDeployment(previousBundleRoot) {
     throw new Error('previous bundle has an unsupported deployment manifest');
   }
   const sourceIndexPath = path.join(previousBundleRoot, 'deployment-evidence', 'source-index.json');
-  if (!fs.existsSync(sourceIndexPath)) return { manifest: previous, sourceIndex: [] };
-  const evidence = JSON.parse(fs.readFileSync(sourceIndexPath, 'utf8'));
-  if (evidence.contract !== 'gradstudio-content-source-index/v1' || evidence.schema_version !== 1 || !Array.isArray(evidence.source_index)) {
+  if (!fs.existsSync(sourceIndexPath)) return { manifest: previous, sourceIndex: [], changeImpact: null };
+  const sourceEvidence = JSON.parse(fs.readFileSync(sourceIndexPath, 'utf8'));
+  if (sourceEvidence.contract !== 'gradstudio-content-source-index/v1' || sourceEvidence.schema_version !== 1 || !Array.isArray(sourceEvidence.source_index)) {
     throw new Error('previous bundle has an unsupported source-index evidence file');
   }
-  return { manifest: previous, sourceIndex: evidence.source_index };
+  const impactPath = path.join(previousBundleRoot, 'deployment-evidence', 'change-impact.json');
+  let changeImpact = null;
+  if (fs.existsSync(impactPath)) {
+    const impactEvidence = JSON.parse(fs.readFileSync(impactPath, 'utf8'));
+    if (impactEvidence.contract !== 'gradstudio-content-impact/v1' || impactEvidence.schema_version !== 1 || !impactEvidence.change_impact) {
+      throw new Error('previous bundle has an unsupported change-impact evidence file');
+    }
+    changeImpact = impactEvidence.change_impact;
+  }
+  return { manifest: previous, sourceIndex: sourceEvidence.source_index, changeImpact };
 }
 
 function copyRetainedReleases(previousBundleRoot, previousDeployment, releasesRoot, activeReleaseId, limit) {
@@ -140,13 +149,17 @@ export function buildStaticBundle({ repositoryRoot, contentRoot, outputRoot, sou
     for (const schema of SCHEMA_FILES) fs.copyFileSync(path.join(repositoryRoot, 'schemas', schema), path.join(schemasRoot, schema.replace('.schema', '')));
 
     const evidenceRoot = path.join(output, 'deployment-evidence');
+    const retryingSameSource = previousDeployment?.manifest.source?.commit === compiled.catalog.source.commit;
+    const changeImpact = retryingSameSource && previousDeployment.changeImpact
+      ? previousDeployment.changeImpact
+      : compiled.impact;
     fs.mkdirSync(evidenceRoot, { recursive: true });
     fs.writeFileSync(path.join(evidenceRoot, 'change-impact.json'), canonicalJson({
       contract: 'gradstudio-content-impact/v1',
       schema_version: 1,
       source: compiled.catalog.source,
       active_release_id: releaseId,
-      change_impact: compiled.impact
+      change_impact: changeImpact
     }));
     fs.writeFileSync(path.join(evidenceRoot, 'source-index.json'), canonicalJson({
       contract: 'gradstudio-content-source-index/v1',
