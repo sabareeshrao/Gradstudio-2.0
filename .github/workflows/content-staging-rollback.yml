@@ -1,0 +1,112 @@
+name: Content staging rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_run_id:
+        description: Successful Content staging deployment run containing the exact bundle artifact
+        required: true
+        type: string
+      expected_source_commit:
+        description: Exact 40-character source commit recorded by that run
+        required: true
+        type: string
+      expected_release_id:
+        description: Exact retained release ID to restore
+        required: true
+        type: string
+      expected_bundle_digest:
+        description: Exact SHA-256 bundle digest recorded by that run
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: content-staging
+  cancel-in-progress: false
+
+jobs:
+  rollback-staging:
+    if: vars.CLOUDFLARE_STAGING_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: staging
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.expected_source_commit }}
+          fetch-depth: 1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+      - name: Verify the source run and exact rollback target
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.deployment_run_id }}
+          EXPECTED_SOURCE_COMMIT: ${{ inputs.expected_source_commit }}
+          EXPECTED_RELEASE_ID: ${{ inputs.expected_release_id }}
+          EXPECTED_BUNDLE_DIGEST: ${{ inputs.expected_bundle_digest }}
+        run: |
+          [[ "$RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$EXPECTED_SOURCE_COMMIT" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$EXPECTED_RELEASE_ID" =~ ^rel-[0-9a-f]{12}-[0-9a-f]{12}$ ]]
+          [[ "$EXPECTED_BUNDLE_DIGEST" =~ ^[0-9a-f]{64}$ ]]
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SOURCE_COMMIT"
+          run_json="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID")"
+          test "$(jq -r '.name' <<<"$run_json")" = "Content staging deployment"
+          test "$(jq -r '.conclusion' <<<"$run_json")" = "success"
+          test "$(jq -r '.head_branch' <<<"$run_json")" = "main"
+          test "$(jq -r '.head_sha' <<<"$run_json")" = "$EXPECTED_SOURCE_COMMIT"
+      - name: Install and validate the exact rollback source
+        run: npm ci && npm run validate
+      - name: Download the exact verified staging bundle
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.deployment_run_id }}
+        run: |
+          rm -rf dist-static
+          gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --name content-static-bundle-staging --dir dist-static
+      - name: Verify every rollback artifact byte and provenance field
+        shell: bash
+        env:
+          EXPECTED_SOURCE_COMMIT: ${{ inputs.expected_source_commit }}
+          EXPECTED_RELEASE_ID: ${{ inputs.expected_release_id }}
+          EXPECTED_BUNDLE_DIGEST: ${{ inputs.expected_bundle_digest }}
+        run: node scripts/verify-static-bundle.mjs --bundle dist-static --source-commit "$EXPECTED_SOURCE_COMMIT" --release-id "$EXPECTED_RELEASE_ID" --bundle-digest "$EXPECTED_BUNDLE_DIGEST"
+      - name: Require isolated non-production configuration
+        shell: bash
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CONTENT_PUBLIC_ORIGIN: ${{ vars.CONTENT_PUBLIC_ORIGIN }}
+          CONTENT_FRAME_ANCESTORS: ${{ vars.CONTENT_FRAME_ANCESTORS }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CONTENT_FRAME_ANCESTORS"
+          node -e "const u=new URL(process.env.CONTENT_PUBLIC_ORIGIN); if(u.protocol!=='https:'||u.origin!==process.env.CONTENT_PUBLIC_ORIGIN||/gradstudio\\.org$/i.test(u.hostname)) throw Error('CONTENT_PUBLIC_ORIGIN must be an isolated HTTPS non-production origin')"
+      - name: Package the exact rollback Worker without credentials
+        run: npm run worker:dry-run
+      - name: Deploy only to the named staging Worker
+        shell: bash
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CONTENT_FRAME_ANCESTORS: ${{ vars.CONTENT_FRAME_ANCESTORS }}
+        run: npx wrangler deploy --env staging --var "ENVIRONMENT:staging" --var "CONTENT_FRAME_ANCESTORS:$CONTENT_FRAME_ANCESTORS"
+      - name: Verify the restored commit, digest, release, and catalog
+        shell: bash
+        env:
+          CONTENT_PUBLIC_ORIGIN: ${{ vars.CONTENT_PUBLIC_ORIGIN }}
+          EXPECTED_SOURCE_COMMIT: ${{ inputs.expected_source_commit }}
+          EXPECTED_RELEASE_ID: ${{ inputs.expected_release_id }}
+          EXPECTED_BUNDLE_DIGEST: ${{ inputs.expected_bundle_digest }}
+        run: |
+          node scripts/verify-deployment.mjs --origin "$CONTENT_PUBLIC_ORIGIN" --source-commit "$EXPECTED_SOURCE_COMMIT" --bundle-digest "$EXPECTED_BUNDLE_DIGEST"
+          test "$(curl --fail --silent --show-error "$CONTENT_PUBLIC_ORIGIN/health/v1" | jq -r '.active_release_id')" = "$EXPECTED_RELEASE_ID"

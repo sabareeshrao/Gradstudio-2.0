@@ -51,6 +51,8 @@ Before production cutover, rollback must be tested in staging. Two mechanisms ar
 
 After rollback, run `scripts/verify-deployment.mjs` using the rolled-back commit and digest. Confirm both `/health/v1` and `/catalog/v1/active.json`, then run the browser matrix. Do not guess a release ID or hand-edit live assets.
 
+The manual **Content staging rollback** workflow implements the retained-artifact path. It accepts a successful staging deployment run ID plus the exact source commit, release ID, and bundle digest recorded by that run. It checks that the source run succeeded on `main`, checks out that exact source revision, validates it, downloads only the named staging artifact, verifies every file/hash and both catalog copies, packages without credentials, and deploys only `gradstudio-content-staging`. A mismatched input or changed artifact fails before Wrangler receives credentials. This workflow has no production target and remains unavailable while `CLOUDFLARE_STAGING_ENABLED` is false.
+
 ## Manual staging evidence
 
 Record for each staging proof: workflow run URL, source commit, active/retained release IDs, bundle digest, file count/bytes, largest file, upload duration, cache/range/header observations, browser/accessibility results, rollback result, and any Cloudflare limits or cost signals.

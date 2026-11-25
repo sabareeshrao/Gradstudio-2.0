@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const validation = fs.readFileSync(path.join(root, '.github', 'workflows', 'content-validation.yml'), 'utf8');
 const staging = fs.readFileSync(path.join(root, '.github', 'workflows', 'content-staging.yml'), 'utf8');
+const rollback = fs.readFileSync(path.join(root, '.github', 'workflows', 'content-staging-rollback.yml'), 'utf8');
 const wrangler = fs.readFileSync(path.join(root, 'wrangler.jsonc'), 'utf8');
 
 function assertPinnedActions(workflow) {
@@ -36,6 +37,21 @@ test('staging deployment is trusted-main-only, serialized, disabled by default, 
   assert.match(staging, /wrangler deploy --env staging/);
   assert.doesNotMatch(staging, /--env production|gradstudio-content-prod|gradstudio\.org/);
   assertPinnedActions(staging);
+});
+
+test('staging rollback is manual, exact-evidence verified, serialized, and non-production', () => {
+  assert.match(rollback, /workflow_dispatch:/);
+  assert.doesNotMatch(rollback, /pull_request:|push:/);
+  assert.match(rollback, /environment:\s*staging/);
+  assert.match(rollback, /if:\s*vars\.CLOUDFLARE_STAGING_ENABLED == 'true'/);
+  assert.match(rollback, /group:\s*content-staging/);
+  assert.match(rollback, /conclusion[^\n]+success/);
+  assert.match(rollback, /head_branch[^\n]+main/);
+  assert.match(rollback, /verify-static-bundle\.mjs/);
+  assert.match(rollback, /secrets\.CLOUDFLARE_API_TOKEN/);
+  assert.match(rollback, /wrangler deploy --env staging/);
+  assert.doesNotMatch(rollback, /--env production|gradstudio-content-prod|gradstudio\.org/);
+  assertPinnedActions(rollback);
 });
 
 test('Wrangler configuration contains no production environment, route, or data binding', () => {
