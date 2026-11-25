@@ -64,10 +64,11 @@ test('draft simulation metadata and files are excluded from the public static bu
   }
 });
 
-test('bundle retains at most two prior immutable releases for rollback', () => {
+test('bundle retains prior immutable releases and can reactivate an exact known-good release', () => {
   const space = temp('retention');
   const first = path.join(space, 'dist-first');
   const second = path.join(space, 'dist-second');
+  const rolledBack = path.join(space, 'dist-rolled-back');
   const firstResult = build(first);
   const secondResult = build(second, {
     sourceCommit: '3333333333333333333333333333333333333333',
@@ -76,6 +77,22 @@ test('bundle retains at most two prior immutable releases for rollback', () => {
   try {
     assert.deepEqual(secondResult.deploymentManifest.retained_release_ids, [firstResult.catalog.release_id]);
     assert.ok(fs.existsSync(path.join(second, 'releases', firstResult.catalog.release_id, 'catalog.json')));
+
+    const rollbackResult = build(rolledBack, {
+      sourceCommit: commit,
+      previousBundleRoot: second
+    });
+    assert.equal(rollbackResult.deploymentManifest.active_release_id, firstResult.catalog.release_id);
+    assert.deepEqual(rollbackResult.deploymentManifest.retained_release_ids, [secondResult.catalog.release_id]);
+    assert.deepEqual(
+      fs.readFileSync(path.join(rolledBack, 'catalog', 'v1', 'active.json')),
+      fs.readFileSync(path.join(first, 'catalog', 'v1', 'active.json'))
+    );
+    assert.deepEqual(
+      fs.readFileSync(path.join(rolledBack, 'releases', firstResult.catalog.release_id, 'catalog.json')),
+      fs.readFileSync(path.join(first, 'releases', firstResult.catalog.release_id, 'catalog.json'))
+    );
+    assert.ok(fs.existsSync(path.join(rolledBack, 'releases', secondResult.catalog.release_id, 'catalog.json')));
   } finally {
     fs.rmSync(space, { recursive: true, force: true });
   }
