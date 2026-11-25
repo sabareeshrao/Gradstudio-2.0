@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-vector-database",
+  "title": "Vector Databases",
+  "slug": "vector-database",
+  "order": 4,
+  "status": "published",
+  "course_id": "course-generative-ai",
+  "section_id": "section-generative-ai",
+  "access": {
+    "display": "open"
+  },
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

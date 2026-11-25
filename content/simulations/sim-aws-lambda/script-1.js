@@ -1,0 +1,9 @@
+
+'use strict';
+const $=id=>document.getElementById(id);
+const sources=[{name:'API Gateway',event:'GET /orders/101',task:'Fetch order details',result:'200 OK · Order #101'},{name:'Amazon S3',event:'photo.jpg uploaded',task:'Resize uploaded image',result:'thumbnail.jpg created'},{name:'EventBridge',event:'Daily scheduled event',task:'Generate daily report',result:'Daily report generated'}];
+let stage=0,calls=0;
+function render(){const s=sources[Number(document.querySelector('input[name="source"]:checked').value)];$('title1').textContent=s.name;$('detail1').textContent=s.event;$('detail2').textContent=s.task;$('detail3').textContent=s.result;for(let i=1;i<=3;i++)$('stage'+i).classList.toggle('inactive',stage<i);for(let i=1;i<=2;i++)$('arrow'+i).setAttribute('stroke',stage>=i+1?'#10b981':'#64748b');$('status').textContent=['Waiting for event','Event received','Function executing','Execution finished'][stage];$('next').textContent=['Trigger event →','Execute Lambda →','Return result →','Reset simulation ↻'][stage];$('calls').textContent=calls;}
+document.querySelectorAll('input[name="source"]').forEach(el=>el.addEventListener('change',()=>{stage=0;render();}));$('next').addEventListener('click',()=>{if(stage===0)calls++;stage=(stage+1)%4;render();});
+function scale(){const n=Number($('requests').value);$('requestValue').textContent=n;$('incoming').textContent=n+' incoming request'+(n===1?'':'s');$('concurrent').textContent=n+' concurrent execution'+(n===1?'':'s');for(let i=0;i<12;i++){const active=i<n,r=$('worker'+i);r.setAttribute('fill',active?'#e99b23':'none');r.setAttribute('fill-opacity',active?'.15':'0');r.setAttribute('stroke',active?'#e99b23':'#64748b');r.setAttribute('stroke-opacity',active?'1':'.35');r.setAttribute('stroke-dasharray',active?'0':'3 4');$('workerText'+i).setAttribute('opacity',active?'1':'0');}}
+$('requests').addEventListener('input',scale);render();scale();

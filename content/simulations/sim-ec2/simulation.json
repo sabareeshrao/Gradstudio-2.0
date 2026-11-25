@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-ec2",
+  "title": "Amazon EC2",
+  "slug": "ec2",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-aws",
+  "section_id": "section-aws",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "script-2.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

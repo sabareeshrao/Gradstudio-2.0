@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-java-multithreading",
+  "title": "Multithreading",
+  "slug": "java-multithreading",
+  "order": 4,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-java",
+  "section_id": "section-java",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

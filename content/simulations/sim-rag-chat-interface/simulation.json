@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-rag-chat-interface",
+  "title": "Chat Interface",
+  "slug": "rag-chat-interface",
+  "order": 16,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-rag-from-scratch",
+  "section_id": "section-rag-from-scratch",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

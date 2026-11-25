@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-transformer",
+  "title": "Transformer Architecture",
+  "slug": "transformer",
+  "order": 2,
+  "status": "published",
+  "course_id": "course-generative-ai",
+  "section_id": "section-generative-ai",
+  "access": {
+    "display": "open"
+  },
+  "entrypoint": "index.html",
+  "assets": [],
+  "capabilities": {
+    "network_origins": []
+  }
+}

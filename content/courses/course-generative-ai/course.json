@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "course",
+  "id": "course-generative-ai",
+  "title": "Generative AI",
+  "slug": "generative-ai",
+  "order": 3,
+  "status": "published",
+  "category_id": "cat-artificial-intelligence",
+  "access": {
+    "display": "open"
+  }
+}

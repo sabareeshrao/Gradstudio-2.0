@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-sql-joins",
+  "title": "SQL Joins",
+  "slug": "sql-joins",
+  "order": 3,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-databases",
+  "section_id": "section-databases",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "script-2.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

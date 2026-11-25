@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-redis",
+  "title": "Redis",
+  "slug": "redis",
+  "order": 2,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-databases",
+  "section_id": "section-databases",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "script-2.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

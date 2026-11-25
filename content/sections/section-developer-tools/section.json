@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "section",
+  "id": "section-developer-tools",
+  "title": "Tools and Workflows",
+  "slug": "tools-and-workflows",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-developer-tools"
+}

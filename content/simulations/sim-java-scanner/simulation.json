@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-java-scanner",
+  "title": "Scanner",
+  "slug": "java-scanner",
+  "order": 2,
+  "status": "published",
+  "course_id": "course-java",
+  "section_id": "section-java",
+  "access": {
+    "display": "open"
+  },
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

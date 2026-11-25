@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090e19">
+<title>Hello World • Java Visual</title>
+<style>
+:root{--bg:#090e19;--panel:#111c2d;--border:#26364c;--text:#f1f6ff;--muted:#90a4c0;--cyan:#66e5ed;--violet:#be9dff;--lime:#9aefb7;--amber:#ffcd86;--mono:"Cascadia Code","SFMono-Regular",Consolas,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% 4%,#183251 0%,#0b1220 40%,#090e19 78%);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+.canvas{max-width:1190px;margin:auto;padding:32px 26px 48px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:900;letter-spacing:.15em}
+.logo-icon{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,var(--cyan),var(--violet));color:#10192c;font-size:22px}
+.lesson{padding:7px 14px;border:1px solid #3a5067;border-radius:100px;color:#bfd6ec;font-size:11px;font-weight:800;letter-spacing:.12em}
+h1{text-align:center;font-size:clamp(44px,7vw,79px);letter-spacing:-.07em;line-height:1.04;margin:53px 0 10px}
+h1 span{background:linear-gradient(90deg,var(--cyan),var(--violet));color:transparent;background-clip:text;-webkit-background-clip:text}
+.subtitle{text-align:center;color:#a4b4c9;font-size:16px;font-weight:500;margin:0 0 44px}
+.subtitle strong{color:#fff}
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) 62px minmax(0,.85fr);align-items:stretch;gap:12px}
+.editor,.terminal{background:#101a2a;border:1px solid #354864;border-radius:22px;box-shadow:0 22px 70px #0005;min-width:0;overflow:hidden}
+.head{height:52px;border-bottom:1px solid #26374c;display:flex;align-items:center;gap:9px;padding:0 20px;color:#adbed6;font:700 12px var(--mono)}
+.dots{display:flex;gap:6px;margin-right:12px}.dots i{width:9px;height:9px;border-radius:50%;background:#ed7587}.dots i:nth-child(2){background:#f1be75}.dots i:nth-child(3){background:#7fe0aa}
+.code{margin:0;padding:31px 18px 32px 21px;font:500 clamp(12px,1.4vw,16px)/2.2 var(--mono);overflow-x:auto}
+.code code{display:block;min-width:max-content}
+.line{display:block;white-space:pre;padding-right:8px;border-radius:8px}
+.num{color:#53677f;display:inline-block;width:28px;user-select:none}
+.kw{color:#bba6fa}.type{color:#73d8f7}.fn{color:#f8d78f}.string{color:#a5f2c3}
+.hi{background:linear-gradient(90deg,#1e3547,transparent)}
+.line .marker{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:7px;font:800 11px var(--mono);margin-left:12px;vertical-align:2px;color:#101a28}
+.m1{background:var(--cyan)}.m2{background:var(--violet)}.m3{background:var(--lime)}
+.bridge{position:relative;display:flex;align-items:center;justify-content:center}
+.bridge:before{content:"";height:2px;width:100%;background:linear-gradient(90deg,var(--cyan),var(--lime));position:absolute;left:0}
+.arrow{position:relative;width:44px;height:44px;display:grid;place-items:center;border:2px solid #5fdccc;background:#112b35;border-radius:50%;font-size:26px;color:var(--lime);z-index:2}
+.terminal{position:relative;background:radial-gradient(circle at 80% 80%,#183b37 0%,transparent 60%),#101a2a;display:flex;flex-direction:column}
+.console{flex:1;min-height:255px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:25px 12px}
+.console small{font:800 11px var(--mono);color:#91b5b4;letter-spacing:.19em;margin-bottom:18px}
+.result{font:800 clamp(26px,3.2vw,40px)/1.2 var(--mono);letter-spacing:-.05em;color:var(--lime);text-align:center;text-shadow:0 0 30px #8bf2af44;white-space:nowrap}
+.console .bar{display:block;height:4px;width:70px;border-radius:3px;background:var(--lime);box-shadow:0 0 20px #8bf2af66;margin-top:26px}
+.explainer-title{margin:36px 0 14px;text-align:center;text-transform:uppercase;letter-spacing:.21em;color:#92a9c6;font-size:11px;font-weight:900}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{min-width:0;background:linear-gradient(160deg,#17273c,#111c2c);border:1px solid #304459;border-radius:18px;padding:21px 20px;display:flex;align-items:center;gap:16px}
+.icon{width:50px;height:50px;flex:0 0 50px;border-radius:15px;display:grid;place-items:center;font:800 24px var(--mono);background:#1a424c;color:var(--cyan)}
+.card:nth-child(2) .icon{background:#33284b;color:var(--violet)}.card:nth-child(3) .icon{background:#1a3b30;color:var(--lime)}
+.card b{display:block;font:800 clamp(13px,1.5vw,17px) var(--mono);white-space:nowrap}
+.card p{margin:4px 0 0;color:#b0c2d7;font-size:13px}
+.card:nth-child(1) b{color:var(--cyan)}.card:nth-child(2) b{color:var(--violet)}.card:nth-child(3) b{color:var(--lime)}
+.bottom{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:28px;color:#adc3d7;font:700 12px var(--mono)}
+.bottom strong{color:var(--amber)}.bottom i{font-style:normal;color:#68859b}
+@media(max-width:800px){.hero{grid-template-columns:1fr;gap:8px}.bridge{height:54px}.bridge:before{width:2px;height:54px;left:calc(50% - 1px);top:0;background:linear-gradient(var(--cyan),var(--lime))}.arrow{transform:rotate(90deg)}.console{min-height:195px}.cards{grid-template-columns:1fr}.card{padding:16px 20px}.canvas{padding:20px 16px 35px}h1{margin-top:38px}.subtitle{margin-bottom:29px}}
+@media(max-width:430px){.code{padding:22px 7px 23px 10px;font-size:11px;line-height:2.45}.num{width:19px}.line .marker{width:18px;height:18px;margin-left:5px;font-size:9px}.head{height:44px}.result{font-size:30px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto}}
+</style>
+<style id="wide-compact-layout">/* Wide compact layout — original theme preserved */
+main,main.canvas{width:100%;max-width:1440px;margin:0 auto;padding:20px clamp(14px,2.4vw,36px) 32px}
+main h1{font-size:clamp(25px,3vw,34px);margin-top:0;margin-bottom:8px}main h2{font-size:20px;margin:18px 0 6px}main h3{font-size:17px}
+main .card,main .panel{padding:12px 16px;border-radius:10px;margin:8px 0}main .tile{padding:7px 9px;border-radius:6px}
+main .diagram{max-height:330px;margin-left:auto;margin-right:auto}
+main .progress{margin:6px 0 8px}main .controls,main .sim-controls{margin-top:8px}
+main .codeblock{margin:8px 0 12px;border-radius:10px}main .tablewrap{max-width:100%;overflow-x:auto}
+.wide-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:0 16px;align-items:start}.wide-unit{min-width:0}
+@media(min-width:760px){.wide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wide-full{grid-column:1/-1}main button:not(.copy){min-height:34px}main .progress button{min-height:20px!important}}
+@media(max-width:759px){main,main.canvas{padding:14px 12px 28px}main .card,main .panel{padding:12px}.wide-grid{gap:0}}</style><style id="vertical-compact-layout">/* Compact vertical layout; original theme retained. */
+main,main.canvas{width:100%;max-width:1440px;margin-inline:auto;padding:12px clamp(12px,2vw,28px) 24px}
+main .wide-grid,main .wide-unit,main .wide-split,main .wide-visual{display:block;min-width:0;max-width:100%}main .wide-controls{display:block;padding:0;border:0}
+main h1{margin:0 0 6px;line-height:1.2}main h2{font-size:19px;margin:14px 0 5px;line-height:1.3}main h3{font-size:16px;margin:8px 0 4px;line-height:1.35}
+main p{margin-block:5px 8px}main .card,main .panel{padding:8px 12px;margin:6px 0;border-radius:8px;min-height:0}
+main .tile{padding:5px 8px;border-radius:6px;min-height:0}
+main .diagram,main .wide-visual>svg,main .panel>svg{display:block;width:100%;height:auto;max-height:280px;min-height:0;margin:0 auto}
+main .codeblock{margin:6px 0 10px;border-radius:8px}main .codeblock pre,main .terminal pre,main pre{padding:8px 10px;margin:4px 0;line-height:1.5}
+main .tablewrap{margin:6px 0;max-width:100%;overflow-x:auto}main td,main th{padding-block:5px}
+main .progress{margin:4px 0 6px}main .controls,main .sim-controls{margin-top:6px;gap:6px}main .bar{margin:4px 0 7px}
+main input[type=range]{height:26px;min-height:0}main .caption{line-height:1.4}
+@media(min-width:760px){main button:not(.copy){min-height:32px;padding-block:6px}main .progress button{min-height:18px!important;padding-block:6px}}
+@media(max-width:759px){main,main.canvas{padding:12px 10px 24px}main .card,main .panel{padding:9px 10px}main .diagram{max-height:300px}}
+</style><style id="balanced-layout">/* Balanced reading width; vertical flow and natural card heights. */
+main,main.canvas{box-sizing:border-box;width:100%;max-width:1040px;margin-inline:auto;padding:20px 24px 32px}
+main .card,main .panel{padding:12px 16px;margin:8px 0;border-radius:10px}
+main .diagram,main .wide-visual>svg,main .panel>svg,main .map,main .cos-svg{max-width:100%;height:auto;max-height:300px}
+main .wide-grid,main .wide-split,main .overview-grid,main .split{display:block}
+main .wide-controls,main .walkthrough{border:0;padding:0}
+main h2{margin-top:20px;margin-bottom:8px}
+main p{max-width:85ch;line-height:1.55}
+main .caption,main .note{line-height:1.45}
+main button:not(.copy):not(.switch){min-height:36px}
+main .progress button{min-height:18px!important}
+@media(max-width:759px){main,main.canvas{padding:14px 12px 28px}main .card,main .panel{padding:10px 12px}main button:not(.copy):not(.switch){min-height:44px}main .progress button{min-height:18px!important}}
+</style>
+<!-- RULE 27: shared compact sizing; original lesson unchanged -->
+<link rel="stylesheet" href="rule-27.css">
+<script defer src="rule-27.js"></script>
+</head>
+<body>
+<main class="canvas">
+  <header class="top">
+    <div class="logo"><span class="logo-icon">J</span> JAVA VISUAL</div>
+    <div class="lesson">LESSON 01</div>
+  </header>
+
+  <h1>Java <span>Hello World</span></h1>
+  <p class="subtitle"><strong>5 lines</strong> of code. <strong>1 message</strong> on screen.</p>
+
+  <div class="hero">
+    <section class="editor" aria-label="Java code">
+      <div class="head"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span> Main.java</div>
+      <pre class="code"><code><span class="line hi"><span class="num">1</span><span class="kw">public class</span> <span class="type">Main</span> {<span class="marker m1">1</span></span><span class="line hi"><span class="num">2</span>  <span class="kw">public static void</span> <span class="fn">main</span>(String[] args) {<span class="marker m2">2</span></span><span class="line hi"><span class="num">3</span>    System.out.<span class="fn">println</span>(<span class="string">"Hello World"</span>);<span class="marker m3">3</span></span><span class="line"><span class="num">4</span>  }</span><span class="line"><span class="num">5</span>}</span></code></pre>
+    </section>
+    <div class="bridge" aria-hidden="true"><div class="arrow">➜</div></div>
+    <section class="terminal" aria-label="Program output">
+      <div class="head"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span> Output</div>
+      <div class="console"><small>ON YOUR SCREEN</small><div class="result">Hello World</div><span class="bar" aria-hidden="true"></span></div>
+    </section>
+  </div>
+
+  <div class="explainer-title">That's all you need to know</div>
+  <section class="cards" aria-label="Code explanation">
+    <article class="card"><div class="icon">1</div><div><b>class Main</b><p>Holds the code.</p></div></article>
+    <article class="card"><div class="icon">2</div><div><b>main()</b><p>Starts the program.</p></div></article>
+    <article class="card"><div class="icon">3</div><div><b>println()</b><p>Prints the message.</p></div></article>
+  </section>
+  <div class="bottom"><strong>CODE</strong><i>→</i><strong>RUN</strong><i>→</i><strong>OUTPUT</strong></div>
+</main>
+</body>
+</html>

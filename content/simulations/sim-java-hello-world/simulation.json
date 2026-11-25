@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-java-hello-world",
+  "title": "Hello World",
+  "slug": "java-hello-world",
+  "order": 1,
+  "status": "published",
+  "course_id": "course-java",
+  "section_id": "section-java",
+  "access": {
+    "display": "open"
+  },
+  "entrypoint": "index.html",
+  "assets": [
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

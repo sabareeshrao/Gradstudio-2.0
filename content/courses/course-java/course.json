@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "course",
+  "id": "course-java",
+  "title": "Java Programming",
+  "slug": "java",
+  "order": 1,
+  "status": "published",
+  "category_id": "cat-programming",
+  "access": {
+    "display": "open"
+  }
+}

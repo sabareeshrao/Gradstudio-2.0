@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-jvm",
+  "title": "Java Virtual Machine (JVM)",
+  "slug": "jvm",
+  "order": 3,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-java",
+  "section_id": "section-java",
+  "entrypoint": "index.html",
+  "assets": [
+    "script-1.js",
+    "script-2.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}

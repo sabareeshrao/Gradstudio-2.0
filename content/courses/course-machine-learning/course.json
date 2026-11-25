@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "course",
+  "id": "course-machine-learning",
+  "title": "Machine Learning & Deep Learning",
+  "slug": "machine-learning",
+  "order": 2,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "category_id": "cat-artificial-intelligence"
+}

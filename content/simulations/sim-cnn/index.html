@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7faff">
+<meta name="description" content="CNN explained visually through one small example: pixels, filters, convolution, ReLU, pooling, and prediction. Interactive and fully offline.">
+<title>CNN — Explained Simply</title>
+<style>
+:root{--bg:#f8faff;--ink:#1d293d;--soft:#52657f;--quiet:#7789a1;--line:#dae4f1;--blue:#2563eb;--purple:#774be0;--green:#13814c;--amber:#eab54c;--card:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:780px;margin:0 auto;padding:25px 15px 64px}
+h1{font-size:clamp(35px,8vw,52px);letter-spacing:-.045em;line-height:1.06;margin:4px 0 13px}
+h2{font-size:clamp(21px,4.5vw,25px);line-height:1.2;letter-spacing:-.025em;margin:27px 0 10px}
+h3{font-size:18px;letter-spacing:-.01em;margin:0 0 8px}
+p{margin:0}
+.eyebrow{font-size:11px;letter-spacing:.14em;font-weight:850;color:var(--blue);margin-bottom:10px}
+.lead{font-size:17px;color:var(--soft);max-width:670px}
+.lead strong{color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 7px 20px rgba(22,47,84,.035)}
+.muted{color:var(--soft)}.caption{font-size:12px;color:var(--soft);line-height:1.6}
+.explain{font-size:14px;color:#52637c;line-height:1.7;margin:7px 0 13px}.explain strong{color:var(--ink)}
+.roadmap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0 29px}
+.road{display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;padding:16px 9px;min-height:114px;border-radius:14px;border:1px solid}
+.road:nth-child(1){background:#eaf2ff;border-color:#c6dbfe}.road:nth-child(2){background:#f3eeff;border-color:#ded0fe}.road:nth-child(3){background:#e9f9f0;border-color:#c7edd9}
+.road-icon{font-size:31px;line-height:1.2}.road b{font-size:14px;margin:5px 0 2px}.road small{font-size:11px;color:#5b6c81}
+.between{display:flex;align-items:center;justify-content:space-between;gap:10px}.tag{display:inline-flex;font-size:11px;color:#65778e;border:1px solid #dce5ef;border-radius:99px;padding:3px 9px;font-weight:750;white-space:nowrap}
+.picture-controls{display:flex;gap:9px;margin:12px 0 16px}
+.btn{background:#fff;color:#334861;border:1px solid #cfdbea;min-height:44px;padding:10px 14px;border-radius:10px;font:750 14px system-ui,-apple-system,sans-serif;cursor:pointer;transition:background .16s,border-color .16s}
+.btn:hover:not(:disabled){background:#f1f6ff;border-color:#9bb8f1}
+.btn.primary,.btn[aria-pressed="true"]{color:#fff;background:var(--blue);border-color:var(--blue)}
+.btn:disabled{opacity:.44;cursor:default}
+.btn:focus-visible,[role=button]:focus-visible{outline:3px solid #9bc0ff;outline-offset:3px}
+.picture-controls .btn{flex:1}
+.step-nav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin:13px 0 15px}
+.step-tab{background:#f3f6fa;border:1px solid #e2e9f2;color:#697a90;cursor:pointer;border-radius:9px;padding:7px 3px;min-height:62px;font:750 11px system-ui,-apple-system,sans-serif}
+.step-tab b{display:block;font-size:14px;font-weight:850;margin-bottom:2px}
+.step-tab[aria-current=step]{background:#e8f1ff;border-color:#2563eb;color:#1d4ed8}
+.progress{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;margin:10px 0 14px}
+.progress span{height:5px;border-radius:99px;background:#e6edf5}.progress span.on{background:#2563eb}
+.lesson-title{font-size:21px;letter-spacing:-.02em;font-weight:850;margin:2px 0 4px}
+.lesson-desc{font-size:14px;color:#53657c;line-height:1.65;max-width:620px;margin:0 0 17px}
+.lesson-scene{border:1px solid #e2e9f3;border-radius:15px;padding:17px 13px;background:#fbfcff}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.flex{display:flex;align-items:center;justify-content:center;gap:8px}.arrow{font-size:25px;color:#a2b1c5}
+.mtitle{font-size:13px;font-weight:850;margin:0 0 9px;text-align:center}
+.matrix{display:grid;gap:3px;margin:auto;width:100%;max-width:250px}
+.matrix[data-size="6"]{grid-template-columns:repeat(6,minmax(0,1fr))}
+.matrix[data-size="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}
+.matrix[data-size="3"]{grid-template-columns:repeat(3,minmax(0,1fr));max-width:170px}
+.matrix[data-size="2"]{grid-template-columns:repeat(2,minmax(0,1fr));max-width:150px}
+.cell{aspect-ratio:1;border-radius:5px;background:#e8f0ff;border:2px solid transparent;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#3b5e8b;font-variant-numeric:tabular-nums;min-width:0}
+.cell.lit{background:#2563eb;color:#fff}
+.cell.minus{background:#edf1f7;color:#6a7d94}
+.cell.plus{background:#eaddff;color:#6536cd}
+.cell.positive{background:#c8dfff;color:#124ca0}
+.cell.zero{background:#f1f4f8;color:#8190a3}
+.cell.relus{background:#c8f2d9;color:#156b42}
+.cell.window{border-color:#edac23;box-shadow:inset 0 0 0 1px #eeb632}
+.cell.active{border-color:#ec9f00}
+.cell.dim{background:#f3f6fb;color:#b1bfd0}
+.matrix-button{cursor:pointer}
+.matrix-button:hover{border-color:#ec9f00}
+.mgroup{background:#fff;border:1px solid #e3eaf3;border-radius:12px;padding:13px 9px;min-width:0}
+.mgroup .caption{text-align:center;margin-top:8px}
+.instruction{margin-top:12px;background:#edf5ff;border:1px solid #d4e5ff;border-radius:10px;padding:10px 12px;font-size:13px;color:#3d5b86}
+.instruction strong{color:#194a9b}
+.center{text-align:center}
+.large{font-size:30px;font-weight:850;letter-spacing:-.025em;color:#1d4ed8}
+.pills{display:flex;justify-content:center;flex-wrap:wrap;gap:7px}
+.pill{border-radius:9px;padding:6px 10px;font-size:12px;font-weight:800;background:#dceafe;color:#1d4ed8}
+.pill.negative{background:#eef1f7;color:#64748b}
+.sum{background:#f2f8ff;border:1px solid #d4e6ff;border-radius:12px;padding:13px 10px;margin-top:12px}
+.mathline{font:750 15px ui-monospace,SFMono-Regular,Consolas,monospace;color:#36516d;text-align:center;line-height:1.8;overflow-wrap:anywhere}
+.sum-answer{font-weight:900;font-size:23px;color:#148050}
+.callout{font-size:13px;color:#4e627b;margin-top:13px;line-height:1.7}
+.callout strong{color:#283b57}
+.page-controls{display:flex;justify-content:space-between;gap:9px;margin-top:14px}
+.page-controls .btn{min-width:104px}
+.scan-buttons{display:flex;justify-content:center;gap:7px;margin-top:12px;flex-wrap:wrap}
+.scan-buttons .btn{min-height:38px;padding:7px 12px;font-size:12px}
+.subnumber{font-size:12px;font-weight:800;color:#59708d}
+.resultline{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:5px}
+.resultline strong{font-variant-numeric:tabular-nums}
+.bar{height:13px;background:#edf1f7;overflow:hidden;border-radius:99px}
+.bar i{display:block;height:100%;background:#a78bfa;border-radius:99px;transition:width .28s ease}
+.bar.winner i{background:#16a66a}
+.class-result{background:#f0fdf5;border:1px solid #cef2db;padding:12px;border-radius:11px;margin-top:15px}
+.class-result b{color:#166534}.class-result small{display:block;color:#547161;margin-top:2px}
+.learning{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.learnbox{text-align:center;border-radius:11px;border:1px solid #dce4f0;background:#f6f9fe;min-height:88px;padding:10px 5px}
+.learnbox span{font-size:23px;display:block}.learnbox b{font-size:12px;display:block}.learnbox small{color:#718299;font-size:10px}
+.bottom{background:#eef6ff;border-left:4px solid #2563eb;border-radius:4px 12px 12px 4px;padding:14px 15px;margin-top:27px;font-size:14px;color:#4b607c}.bottom strong{color:#1d4ed8}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:15px}
+.fact{border-radius:11px;border:1px solid #e3eaf3;background:#fafcff;padding:10px}.fact b{display:block;font-size:13px}.fact small{display:block;color:#66788f;font-size:11px;margin-top:3px}
+@media(max-width:560px){main{padding:18px 10px 45px}.card{padding:13px;border-radius:14px}.roadmap{gap:6px;margin:14px 0 22px}.road{padding:10px 4px;min-height:102px}.road-icon{font-size:25px}.road b{font-size:12px}.road small{font-size:10px}.step-nav{gap:3px}.step-tab{min-height:56px;padding:5px 1px;font-size:9px}.step-tab b{font-size:13px}.lesson-scene{padding:11px 8px}.two{gap:8px}.mgroup{padding:9px 5px}.mtitle{font-size:12px}.matrix{gap:2px}.cell{font-size:10px;border-width:1.5px;border-radius:3px}.facts{grid-template-columns:1fr}.learning{gap:4px}.learnbox{padding:8px 3px;min-height:83px}.learnbox b{font-size:10px}.learnbox small{font-size:9px}.sum-answer{font-size:21px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+<style id="wide-compact-layout">/* Wide compact lesson layout — desktop split panels, mobile single column */
+main{width:100%;max-width:1440px;margin:0 auto;padding:20px clamp(14px,2.4vw,36px) 32px}
+main h1{font-size:clamp(25px,3vw,34px);margin-top:0;margin-bottom:8px}
+main h2{font-size:20px;margin:18px 0 6px}main h3{font-size:17px}
+main .lead,main .explain{max-width:none}
+main .card,main .panel{padding:12px 16px;border-radius:10px;margin:8px 0}
+main .tile{padding:7px 9px;border-radius:6px}
+main .diagram,main .panel>svg,main .map,main .cos-svg{max-height:330px;margin-left:auto;margin-right:auto}
+main .progress{margin-top:6px;margin-bottom:8px}
+main .controls,main .page-controls,main .wizardControls{margin-top:8px}
+.wide-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:0 16px;align-items:start}
+.wide-unit,.wide-visual,.wide-controls{min-width:0}
+.wide-split{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:center}
+.wide-visual>svg{display:block;width:100%;height:auto;max-height:330px;margin:auto}
+@media(min-width:760px){.wide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wide-full{grid-column:1/-1}.wide-split{grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:24px}.wide-controls{padding-left:20px;border-left:1px solid currentColor;border-left-color:rgba(128,128,128,.25)}main button:not(.switch):not(.step):not(.step-tab):not(.stepbutton){min-height:34px}main .progress button{min-height:20px!important}}
+@media(max-width:759px){main{padding:14px 12px 28px}main .card,main .panel{padding:12px}.wide-grid{gap:0}.wide-split{gap:8px}}</style><style id="vertical-compact-layout">/* Wide, compact, vertical lessons. Keep original comparison grids and simulation internals. */
+main,main.canvas{width:100%;max-width:1440px;margin-inline:auto;padding:12px clamp(12px,2vw,28px) 24px}
+main .wide-grid,main .wide-unit,main .wide-split,main .wide-visual,main .overview-grid,main .overview-grid>div,main .split,main .visual{display:block;min-width:0;max-width:100%}
+main .wide-controls,main .walkthrough,main .scaling-controls{display:block;padding:0;border:0;min-width:0}
+main h1{margin:0 0 6px;line-height:1.2}main h2{font-size:19px;margin:14px 0 5px;line-height:1.3}main h3{font-size:16px;margin:0 0 4px;line-height:1.35}
+main p{margin-block:5px 8px}main .card,main .panel{padding:8px 12px;margin:6px 0;border-radius:8px;min-height:0}
+main .tile,main .fact,main .road,main .learnbox{padding:5px 8px;border-radius:6px;min-height:0}
+main .diagram,main .wide-visual>svg,main .panel>svg,main .map,main .cos-svg,main #arch,main #scaling{display:block;width:100%;height:auto;max-height:270px;min-height:0;margin:0 auto}
+main #scaling,main #cosDiagram{max-height:190px}main #arch,main #architecture{max-height:295px}
+main #detail,main #stepArea,main #stepBody,main #wizardBody,main .stageArea,main .stepbody{min-height:0;height:auto}
+main .progress{margin:4px 0 6px}main .controls,main .page-controls,main .wizardControls,main .sim-controls{margin-top:6px;gap:6px}
+main .stack,main .flow{gap:4px}main .arrow,main .ragdown{font-size:18px;line-height:1.1;margin:2px 0}
+main .glyph{font-size:22px;line-height:1.2}main .bar{margin:4px 0 7px;height:8px}main .listrow,main .tech{padding-block:5px}
+main pre,main .codeBlock{padding:8px 10px;margin:5px 0;line-height:1.5}main .codeblock{margin:6px 0 10px;border-radius:8px}
+main .over,main .choice,main .instance,main .step,main .step-tab{min-height:0}main .instance{padding:10px}main .stageArea{padding:10px}
+main .roadmap,main .step-nav,main .steps,main .stepper{margin-block:8px}
+main input[type=range]{height:26px;min-height:0}main .caption{line-height:1.4}
+@media(min-width:760px){main button:not(.switch):not(.copy){min-height:32px;padding-block:6px}main .progress button{min-height:18px!important;padding-block:6px}}
+@media(max-width:759px){main,main.canvas{padding:12px 10px 24px}main .card,main .panel{padding:9px 10px}main .diagram,main .wide-visual>svg,main .panel>svg,main .map,main .cos-svg{max-height:290px}}
+</style><style id="balanced-layout">/* Balanced reading width; vertical flow and natural card heights. */
+main,main.canvas{box-sizing:border-box;width:100%;max-width:1040px;margin-inline:auto;padding:20px 24px 32px}
+main .card,main .panel{padding:12px 16px;margin:8px 0;border-radius:10px}
+main .diagram,main .wide-visual>svg,main .panel>svg,main .map,main .cos-svg{max-width:100%;height:auto;max-height:300px}
+main .wide-grid,main .wide-split,main .overview-grid,main .split{display:block}
+main .wide-controls,main .walkthrough{border:0;padding:0}
+main h2{margin-top:20px;margin-bottom:8px}
+main p{max-width:85ch;line-height:1.55}
+main .caption,main .note{line-height:1.45}
+main button:not(.copy):not(.switch){min-height:36px}
+main .progress button{min-height:18px!important}
+@media(max-width:759px){main,main.canvas{padding:14px 12px 28px}main .card,main .panel{padding:10px 12px}main button:not(.copy):not(.switch){min-height:44px}main .progress button{min-height:18px!important}}
+</style>
+<!-- RULE 27: shared compact sizing; original lesson unchanged -->
+<link rel="stylesheet" href="rule-27.css">
+<script defer src="rule-27.js"></script>
+</head>
+<body>
+<main>
+<header><div class="eyebrow">VISUAL AI LESSON · BEGINNER FRIENDLY</div><h1>How a CNN works</h1><p class="lead">A <strong>Convolutional Neural Network</strong> learns to find useful image patterns — starting with simple lines, then combining features to recognize objects.</p></header>
+<div class="roadmap" aria-label="Three main ideas">
+<div class="road"><span class="road-icon" aria-hidden="true">▦</span><b>Pixels</b><small>Image as numbers</small></div>
+<div class="road"><span class="road-icon" aria-hidden="true">🔎</span><b>Patterns</b><small>Small moving filter</small></div>
+<div class="road"><span class="road-icon" aria-hidden="true">✓</span><b>Recognize</b><small>Combine features</small></div>
+</div><div class="wide-grid"><div class="wide-unit">
+<h2>Learn with one tiny image</h2>
+<p class="explain">We will use a <strong>6×6 black-and-white image</strong> to understand every operation. You only need to follow one line detector.</p>
+<section class="card" aria-labelledby="lessonHeading">
+<div class="between"><h3 id="lessonHeading">Interactive walkthrough</h3><span class="tag" id="stepCount">Step 1 of 6</span></div>
+<div class="picture-controls" role="group" aria-label="Choose an example image"><button class="btn primary" data-picture="vertical" aria-pressed="true">▥ Vertical line</button><button class="btn" data-picture="horizontal" aria-pressed="false">▤ Horizontal line</button></div>
+<nav class="step-nav" id="stepNav" aria-label="CNN explanation steps">
+<button class="step-tab" data-step="0" aria-current="step"><b>1</b>Image</button>
+<button class="step-tab" data-step="1"><b>2</b>Filter</button>
+<button class="step-tab" data-step="2"><b>3</b>Slide</button>
+<button class="step-tab" data-step="3"><b>4</b>ReLU</button>
+<button class="step-tab" data-step="4"><b>5</b>Pooling</button>
+<button class="step-tab" data-step="5"><b>6</b>Result</button>
+</nav>
+<div class="progress" id="progress" aria-hidden="true"><span class="on"></span><span></span><span></span><span></span><span></span><span></span></div>
+<div id="stepArea" aria-live="polite"></div>
+<div class="page-controls"><button class="btn" id="prev" disabled>‹ Previous</button><button class="btn primary" id="next">Next step →</button></div>
+</section></div><div class="wide-unit">
+<h2>How does a CNN learn its filters?</h2>
+<p class="explain">The filter above was <strong>hand-designed for teaching</strong>. In a real CNN, the network normally starts with adjustable weights and improves them by learning from labeled examples.</p>
+<section class="card">
+<div class="learning">
+<div class="learnbox"><span>🖼️</span><b>Example</b><small>Image + label</small></div>
+<div class="learnbox"><span>🧠</span><b>Predict</b><small>Current weights</small></div>
+<div class="learnbox"><span>🎯</span><b>Error</b><small>Compare answers</small></div>
+<div class="learnbox"><span>↻</span><b>Improve</b><small>Update weights</small></div>
+</div>
+<p class="explain" style="margin:13px 0 0">Training repeats this cycle using <strong>backpropagation</strong> and an optimizer. Later CNN layers combine simple edges and textures into richer patterns that can help recognize cats, cars, faces, or other objects.</p>
+</section></div><div class="wide-unit">
+<h2>Three words to remember</h2>
+<div class="facts">
+<div class="fact"><b>Filter (kernel)</b><small>A small set of weights that detects local patterns.</small></div>
+<div class="fact"><b>Feature map</b><small>The grid of responses produced by a filter.</small></div>
+<div class="fact"><b>Pooling</b><small>Keeps important local values in a smaller grid.</small></div>
+</div>
+<div class="bottom"><strong>Takeaway:</strong> A CNN learns reusable filters. They slide over images to create feature maps, then layers transform and combine those features to make predictions.</div></div></div></main>
+<script src="script-1.js"></script>
+<script id="simulator-keyboard" src="script-2.js"></script></body>
+</html>
