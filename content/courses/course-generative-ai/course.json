@@ -6,7 +6,7 @@
   "slug": "generative-ai",
   "order": 3,
   "status": "published",
-  "category_id": "cat-ai",
+  "category_id": "cat-artificial-intelligence",
   "access": {
     "display": "open"
   }
