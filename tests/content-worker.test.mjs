@@ -34,6 +34,7 @@ function environment() {
 test('active catalog is public JSON and cannot be cached as immutable', async () => {
   const response = await handleRequest(new Request('https://content.example/catalog/v1/active.json'), environment());
   assert.equal(response.status, 200);
+  assert.match(response.headers.get('Content-Type'), /^application\/json/);
   assert.equal(response.headers.get('Cache-Control'), 'no-cache, max-age=0, must-revalidate');
   assert.equal(response.headers.get('Access-Control-Allow-Origin'), '*');
   assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff');
