@@ -14,8 +14,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  staging-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    environment: staging
+    outputs:
+      enabled: ${{ steps.evaluate.outputs.enabled }}
+    steps:
+      - name: Resolve the environment-scoped staging gate
+        id: evaluate
+        shell: bash
+        env:
+          CLOUDFLARE_STAGING_ENABLED: ${{ vars.CLOUDFLARE_STAGING_ENABLED }}
+        run: |
+          if [ "$CLOUDFLARE_STAGING_ENABLED" = "true" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "enabled=false" >> "$GITHUB_OUTPUT"
+          echo "Staging deployment is disabled; no credentialed job will run." >> "$GITHUB_STEP_SUMMARY"
+
   deploy-staging:
-    if: vars.CLOUDFLARE_STAGING_ENABLED == 'true'
+    needs: staging-gate
+    if: needs.staging-gate.outputs.enabled == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     environment: staging

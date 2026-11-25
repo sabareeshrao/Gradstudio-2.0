@@ -2,7 +2,7 @@
 
 ## Trust boundary
 
-Pull-request validation has read-only repository permission and no deployment secret. Staging deployment runs only from the exact current `main` commit, in the GitHub `staging` environment, when `CLOUDFLARE_STAGING_ENABLED` equals `true`. The workflow repeats the remote-main comparison immediately before deployment and serializes deployments.
+Pull-request validation has read-only repository permission and no deployment secret. Staging deployment runs only from the exact current `main` commit, in the GitHub `staging` environment, when `CLOUDFLARE_STAGING_ENABLED` equals `true`. A credential-free preflight job first resolves that environment-scoped variable and exports a boolean job output; only a second job gated on that output can reference the deployment secret. This avoids evaluating an environment variable before GitHub has attached the environment to a job. The workflow repeats the remote-main comparison immediately before deployment and serializes deployments.
 
 The staging workflow has no production Worker name, route, zone, environment, or credential. `gradstudio-content-staging` must live in the separate **GradStudio Non-Production** Cloudflare account.
 
@@ -34,7 +34,7 @@ On a trusted push to `main`, the workflow:
 10. deploys only `gradstudio-content-staging`;
 11. verifies health, source commit, bundle digest, active release, and catalog contract.
 
-A failed gate blocks deployment. Fork pull requests never execute this workflow and never receive the environment secret.
+A false, missing, or malformed gate value completes the preflight without starting the credentialed deployment job. A failed gate blocks deployment. Fork pull requests never execute this workflow and never receive the environment secret.
 
 A retry of the same source commit reuses the prior verified change-impact evidence, excludes the active release from its own retention list, and produces the same deployment manifest and bundle digest byte-for-byte. Serialized staging concurrency plus exact remote-`main` checks before build and deployment prevent an older queued run from publishing over a newer commit.
 

@@ -16,6 +16,28 @@ function assertPinnedActions(workflow) {
   for (const [, action, revision] of actions) assert.match(revision, /^[0-9a-f]{40}$/, `${action} must use an immutable revision`);
 }
 
+function assertEnvironmentResolvedStagingGate(workflow, credentialedJob) {
+  assert.doesNotMatch(
+    workflow,
+    /^\s{4}if:\s*vars\.CLOUDFLARE_STAGING_ENABLED\s*==\s*'true'/m,
+    'environment-scoped variables are unavailable during job-level pre-evaluation',
+  );
+  assert.match(workflow, /staging-gate:\s*\n[\s\S]*?environment:\s*staging/);
+  assert.match(workflow, /CLOUDFLARE_STAGING_ENABLED:\s*\$\{\{ vars\.CLOUDFLARE_STAGING_ENABLED \}\}/);
+  assert.match(workflow, /enabled=true[^]*GITHUB_OUTPUT/);
+  assert.match(workflow, /enabled=false[^]*GITHUB_OUTPUT/);
+
+  const gateStart = workflow.indexOf('  staging-gate:');
+  const protectedStart = workflow.indexOf(`  ${credentialedJob}:`);
+  assert.ok(gateStart >= 0 && protectedStart > gateStart, 'gate must precede the credentialed job');
+  const gate = workflow.slice(gateStart, protectedStart);
+  assert.doesNotMatch(gate, /secrets\./, 'the gate job must not reference deployment secrets');
+
+  const protectedJobDefinition = workflow.slice(protectedStart);
+  assert.match(protectedJobDefinition, /needs:\s*staging-gate/);
+  assert.match(protectedJobDefinition, /if:\s*needs\.staging-gate\.outputs\.enabled == 'true'/);
+}
+
 test('pull-request validation is read-only, pinned, credential-free, and cannot deploy', () => {
   assert.match(validation, /permissions:\s*\n\s*contents:\s*read/);
   assert.doesNotMatch(validation, /\$\{\{\s*secrets\./);
@@ -27,7 +49,7 @@ test('staging deployment is trusted-main-only, serialized, disabled by default, 
   assert.match(staging, /branches:\s*\[main\]/);
   assert.doesNotMatch(staging, /pull_request/);
   assert.match(staging, /environment:\s*staging/);
-  assert.match(staging, /if:\s*vars\.CLOUDFLARE_STAGING_ENABLED == 'true'/);
+  assertEnvironmentResolvedStagingGate(staging, 'deploy-staging');
   assert.match(staging, /group:\s*content-staging/);
   assert.match(staging, /cancel-in-progress:\s*false/);
   assert.match(staging, /git rev-parse origin\/main/);
@@ -45,7 +67,7 @@ test('staging rollback is manual, exact-evidence verified, serialized, and non-p
   assert.match(rollback, /workflow_dispatch:/);
   assert.doesNotMatch(rollback, /pull_request:|push:/);
   assert.match(rollback, /environment:\s*staging/);
-  assert.match(rollback, /if:\s*vars\.CLOUDFLARE_STAGING_ENABLED == 'true'/);
+  assertEnvironmentResolvedStagingGate(rollback, 'rollback-staging');
   assert.match(rollback, /group:\s*content-staging/);
   assert.match(rollback, /conclusion[^\n]+success/);
   assert.match(rollback, /head_branch[^\n]+main/);
