@@ -118,6 +118,45 @@ main .progress button{min-height:18px!important}
 <!-- RULE 27: shared compact sizing; original lesson unchanged -->
 <link rel="stylesheet" href="rule-27.css">
 <script defer src="rule-27.js"></script>
+
+<style>
+/* GradStudio appearance: adapt reading surfaces; retain original code and illustration colors. */
+@media (prefers-color-scheme: dark) { html,body{color-scheme:dark;background:#212121;color:#ececec} :root{--bg:#212121;--ink:#ececec;--text:#ececec}  :root{--surface:#262626;--deep:#171717;--raised:#303030;--stroke:#424242}  }
+@media (prefers-color-scheme: light) {
+html,body{color-scheme:light;background:#fff;color:#171717}
+:root{--bg:#fff;--panel:#fff;--card:#fff;--ink:#171717;--text:#171717;--muted:#626262;--line:#e5e5e5;--border:#dedede;--surface:#f5f5f5;--soft:#f5f5f5;--blue:#2563eb;--green:#16794a;--purple:#6d28d9;--orange:#a54c00;--red:#b91c1c;--amber:#925500}
+main .card,main .panel,main article,main .tile{background:#fff;color:#171717;border-color:#e5e5e5}
+main .caption,main small,main .muted,main .label,main .legend,main .intro,main .subtitle,main .explain,main .lead,main .brandtxt,main .small,main .bottom{color:#626262}
+main button,main select,main input:not([type=range]):not([type=radio]):not([type=checkbox]){background:#f5f5f5;color:#171717;border-color:#d6d6d6}
+main button.primary,main .primary{background:#171717;color:#fff;border-color:#171717}
+main .detail,main .query,main .variables>div,main .status,main .pill{background:#f5f5f5;color:#171717;border-color:#dedede}
+main .green,main .good,main .correct,main .diffadd{color:#16794a}
+main .red,main .bad,main .incorrect,main .diffdel{color:#b91c1c}
+main .blue,main a{color:#1d4ed8}
+main .orange{color:#a54c00}
+main .purple{color:#6d28d9}
+main pre,main .terminal,main .editor{background:#171717;color:#ececec;border-color:#424242}
+main pre small,main .terminal small{color:#b4b4b4}
+main .terminal .green,main .terminal .good,main .terminal .prompt,main pre .green,main pre .comment{color:#86efac}
+main pre .blue,main .terminal .blue{color:#93c5fd}
+main .bar,main .progress i,main .progress button{background:#e5e5e5}
+main .progress button.active{background:#6d28d9}
+main .bar i{background:#16794a}
+main hr,main td,main th{border-color:#e5e5e5}
+svg.diagram,svg.map,svg.cos-svg,svg.fidelity-svg,article>svg:not(.ico){background:#212121;color:#ececec;border-radius:8px;--ink:#ececec;--text:#ececec;--muted:#b4b4b4;--line:#424242;--blue:#93c5fd;--green:#86efac;--purple:#c4b5fd}
+
+:root{--deep:#f5f5f5;--raised:#f5f5f5;--stroke:#dedede;--secondary:#626262;--orange-bg:#fff3e5;--blue-bg:#eff6ff;--green-bg:#ecfdf5;--red-bg:#fef2f2}
+main h1,main .explain strong,main .lead strong,main .over strong,main .choice strong{color:#171717}
+main .over,main .over:nth-child(2),main .over:nth-child(4),main .storage,main .stageArea,main .choice,main .flowbox,main .step{background:#f5f5f5;color:#171717;border-color:#dedede}
+main .over small,main .choice small{color:#626262}
+main .over.ec2,main .choice[aria-pressed=true],main .flowbox.orange,main .step[aria-current=step]{background:#fff3e5;color:#a54c00;border-color:#d97706}
+main .choice[aria-pressed=true] strong,main .over.ec2 strong{color:#a54c00}
+main .flowbox.blue{background:#eff6ff;color:#1d4ed8;border-color:#93c5fd}
+main .brandmark,main .tag{background:#fff3e5;color:#a54c00;border-color:#e9a35b}
+main .btn.orange,main .btn[aria-pressed=true]{background:#a54c00;color:#fff;border-color:#a54c00}
+main .btn.danger{background:#fef2f2;color:#b91c1c;border-color:#fca5a5}
+}
+</style>
 </head>
 <body><main>
 <header>
