@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "course",
+  "id": "course-web-platform",
+  "title": "Web Platform Foundations",
+  "slug": "web-platform-foundations",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "category_id": "cat-web-development"
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-browser-rendering-pipeline",
+  "title": "Browser Rendering Pipeline",
+  "slug": "browser-rendering-pipeline",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-web-platform",
+  "section_id": "section-web-platform",
+  "entrypoint": "index.html",
+  "assets": [],
+  "capabilities": {
+    "network_origins": []
+  }
+}
