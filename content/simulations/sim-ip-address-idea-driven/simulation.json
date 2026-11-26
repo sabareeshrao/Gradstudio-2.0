@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-ip-address-idea-driven",
+  "title": "IP Address — Idea-Based Learning",
+  "slug": "ip-address-idea-driven",
+  "order": 5,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-developer-tools",
+  "section_id": "section-developer-tools",
+  "entrypoint": "index.html",
+  "assets": [],
+  "capabilities": {
+    "network_origins": []
+  }
+}
