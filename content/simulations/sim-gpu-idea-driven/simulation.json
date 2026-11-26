@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-gpu-idea-driven",
+  "title": "GPU — Recreating the invention",
+  "slug": "gpu-idea-driven",
+  "order": 100,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-machine-learning",
+  "section_id": "section-machine-learning",
+  "entrypoint": "index.html",
+  "assets": [],
+  "capabilities": {
+    "network_origins": []
+  }
+}
