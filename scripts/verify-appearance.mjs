@@ -8,11 +8,13 @@ import {fileURLToPath} from "node:url";
 const repoRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const contentRoot=path.join(repoRoot,"content/simulations");
 const {chromium}=createRequire(path.resolve(process.env.PLAYWRIGHT_PACKAGE_JSON || ""))("playwright");
+const idsArgument=process.argv.indexOf("--ids");
+const selectedIds=idsArgument===-1?null:new Set(String(process.argv[idsArgument+1]||"").split(",").filter(Boolean));
 const lessons=(await fs.readdir(contentRoot,{withFileTypes:true})).filter(x=>x.isDirectory()).map(x=>x.name).sort();
 const published=[];
 for(const id of lessons){
   const manifest=JSON.parse(await fs.readFile(path.join(contentRoot,id,"simulation.json"),"utf8"));
-  if(manifest.status==="published")published.push({id,entry:manifest.entrypoint});
+  if(manifest.status==="published"&&(!selectedIds||selectedIds.has(id)))published.push({id,entry:manifest.entrypoint});
 }
 const types={".html":"text/html; charset=utf-8",".js":"text/javascript; charset=utf-8",".css":"text/css; charset=utf-8",".svg":"image/svg+xml",".png":"image/png",".jpg":"image/jpeg",".webp":"image/webp",".woff2":"font/woff2"};
 const listen=server=>new Promise(resolve=>server.listen(0,"127.0.0.1",()=>resolve("http://127.0.0.1:"+server.address().port)));
@@ -81,5 +83,5 @@ try{
     }));
   }
 }finally{await browser.close();parent.close();content.close();}
-console.log("Appearance checks: "+evidence.length+"/"+(published.length*2)+" lesson/viewports");
+console.log("Appearance checks: "+evidence.length+"/"+(published.length*2)+" lesson/viewports; scope="+(selectedIds?"changed":"full"));
 if(failures.length){console.error(failures.join("\n"));process.exitCode=1;}

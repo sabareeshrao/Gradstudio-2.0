@@ -1,40 +1,71 @@
 name: Content appearance validation
+
 on:
   pull_request:
-    paths: ['content/**', 'scripts/verify-appearance.mjs', '.github/workflows/content-appearance.yml']
-  push:
-    branches: [chatgpt/lesson-appearance-palettes]
-    paths: ['content/**', 'scripts/verify-appearance.mjs', '.github/workflows/content-appearance.yml']
+    paths:
+      - "content/**"
+      - "scripts/select-appearance-scope.mjs"
+      - "scripts/verify-appearance.mjs"
+      - "tests/appearance-scope.test.mjs"
+      - ".github/workflows/content-appearance.yml"
+  schedule:
+    - cron: "17 7 * * 1"
+  workflow_dispatch:
+
 permissions:
   contents: read
+
+concurrency:
+  group: content-appearance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verify-appearance:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Select changed lessons or the scheduled full regression
+        id: scope
+        env:
+          APPEARANCE_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          APPEARANCE_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/select-appearance-scope.mjs ${{ github.event_name != 'pull_request' && '--full' || '' }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.scope.outputs.scope != 'none'
         with:
           repository: sabareeshrao/Gradstudio
-          ref: d8d724c23610ee8c637e1977a3b14c4ed6f00b73
+          ref: 167158fd9e44859b9872dc5fda3cc08911388c6f
           path: .appearance-review-app
           persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        if: steps.scope.outputs.scope != 'none'
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: .appearance-review-app/package-lock.json
-      - run: npm ci --prefix .appearance-review-app
-      - run: cd .appearance-review-app && npx playwright install --with-deps chrome
-      - name: Verify every published lesson in a sandbox at two viewport sizes
+      - name: Install locked browser-test dependencies
+        if: steps.scope.outputs.scope != 'none'
+        run: npm ci --prefix .appearance-review-app
+      - name: Verify runner-provided Chrome
+        if: steps.scope.outputs.scope != 'none'
+        run: google-chrome --version
+      - name: Verify affected published lessons in a sandbox at two viewport sizes
+        if: steps.scope.outputs.scope == 'changed'
+        env:
+          PLAYWRIGHT_PACKAGE_JSON: ${{ github.workspace }}/.appearance-review-app/package.json
+        run: node scripts/verify-appearance.mjs --ids "${{ steps.scope.outputs.ids }}"
+      - name: Verify the complete published library
+        if: steps.scope.outputs.scope == 'full'
         env:
           PLAYWRIGHT_PACKAGE_JSON: ${{ github.workspace }}/.appearance-review-app/package.json
         run: node scripts/verify-appearance.mjs
       - name: Upload sampled lesson appearance evidence
-        if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always() && steps.scope.outputs.scope != 'none'
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: lesson-appearance-evidence-${{ github.run_id }}
           path: appearance-evidence/

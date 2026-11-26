@@ -16,14 +16,9 @@ GitHub is the authoring source of truth. Production will use a deployed, immutab
 
 ## Current status
 
-The versioned source schemas, deterministic compiler, synthetic security/operation fixtures, immutable Static Assets bundle builder, minimal Content Worker, credential-free packaging proof, and read-only pull-request validation are implemented on review branches. A staging-only deployment workflow is present but remains disabled until the separate non-production Cloudflare account and GitHub `staging` environment are configured. No real or legacy educational content and no Cloudflare deployment have been created.
+The fresh Git-authored library, deterministic compiler, immutable Workers Static Assets bundle, independent content Worker, isolated Cloudflare staging deployment, rollback workflow, application catalog adapter, and browser appearance validation are implemented. Staging serves only new content from this repository; no legacy educational catalog was migrated. Routine content pull requests are eligible for trusted automatic merging and staging dispatch only after both credential-free validation workflows pass.
 
-Before production publishing, the approved implementation must still establish:
-
-1. isolated Cloudflare staging and measured Content Worker behavior;
-2. browser/accessibility tests against the deployed origin;
-3. measured Workers Static Assets versus R2 selection;
-4. tested staging rollback and founder-authorized initial production cutover.
+Production remains unchanged and unauthorized. Before production publishing, the project must finish the documented staging regression/rollback evidence, reconcile the private readiness tracker, and receive a separate founder authorization naming the exact application and content releases.
 
 ## Intended source layout
 

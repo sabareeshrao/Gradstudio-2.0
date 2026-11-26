@@ -54,3 +54,5 @@ Require the exact stable ID and confirm the desired status first. Prefer retire.
 - committed, staged and production states separately;
 - rollback commit/release, if any;
 - any sensitive approval or deployment still required.
+
+For eligible routine content-only pull requests, the report may include an automatic merge and staging result after both validation workflows pass. Never request a manual merge for such a change. Changes to schemas, compilers, workflows, delivery code, permissions, or production still require the protected path.
