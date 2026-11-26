@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-aws-syllabus",
+  "course_id": "course-aws",
+  "section_id": "section-aws",
+  "title": "AWS Syllabus — Idea-Based Learning",
+  "slug": "aws-syllabus",
+  "order": 9,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "entrypoint": "index.html",
+  "assets": [],
+  "capabilities": {
+    "network_origins": []
+  }
+}
