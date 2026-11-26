@@ -62,6 +62,46 @@ main .progress button{min-height:18px!important}
 <!-- RULE 27: shared compact sizing; original lesson unchanged -->
 <link rel="stylesheet" href="rule-27.css">
 <script defer src="rule-27.js"></script>
+
+<style>
+/* GradStudio appearance: preserve the original light lesson; adapt its reading surfaces for dark. */
+@media (prefers-color-scheme: light) { html,body{color-scheme:light;background:#fff} }
+@media (prefers-color-scheme: dark) {
+html,body{color-scheme:dark;background:#212121;color:#ececec}
+:root{--bg:#212121;--card:#262626;--ink:#ececec;--muted:#b4b4b4;--line:#424242;--border:#424242}
+main .card,main .panel,main .message{background:#262626;color:#ececec;border-color:#424242}
+main .tile,main .outline,main .jitbox,main .op,main .output,main .work,main .status,main .session{background:#303030;color:#ececec;border-color:#505050}
+main .caption,main small,main .label,main .muted,main .note,main .arrow,main .tech .value,main th{color:#b4b4b4}
+main .blue,main .soft,main .jitbox.active{background:#203752;color:#b7d6ff;border-color:#426187}
+main .purple,main .jitbox.hot,main .vector span{background:#37294b;color:#d8c5ff;border-color:#65528b}
+main .green,main .status.active{background:#183b2b;color:#9ae4b6;border-color:#37674b}
+main .red{background:#48292e;color:#ffb4b4;border-color:#78454b}
+main .orange{background:#483420;color:#ffd09b;border-color:#795838}
+main .progress i,main .progress span,main .bar,main .track{background:#424242}
+main .progress .on i,main .progress span.on{background:#60a5fa}
+main button.secondary,main button.alt,main .seg button,main .stage,main input:not([type=range]),main textarea,main select{background:#303030;color:#ececec;border-color:#505050}
+main .seg button[aria-pressed=true],main .stage.active{background:#244b80;color:#fff;border-color:#60a5fa}
+main pre,main .codebox,main .codebox pre,main .terminal{background:#171717;color:#ececec;border-color:#424242}
+main code{color:inherit}
+main td,main th,main hr,main .tech,main .listrow{border-color:#424242}
+main a,main .glyph,main .temp{color:#93c5fd}
+main .check,main .good,main .metric,main .generated strong{color:#86efac}
+main .bad{color:#fca5a5}
+/* Retain original diagram palettes on a neutral light illustration surface. */
+svg.diagram,svg.map,svg.cos-svg,svg.fidelity-svg{background:#fff;color:#172033;border-radius:8px}
+svg.diagram text,svg.map text,svg.cos-svg text,svg.fidelity-svg text{color:#172033}
+
+:root{--blue:#60a5fa;--violet:#b9a7ff;--green:#86efac;--soft:#303030}
+main .lead,main .explain,main .legend,main .tag,main .metric .label,main .formula{color:#b4b4b4}
+main .explain strong,main .lead strong{color:#ececec}
+main .btn,main .stepbutton,main .metric,main .matched{background:#303030;color:#ececec;border-color:#505050}
+main .btn.primary,main .btn[aria-pressed=true],main .stepbutton[aria-current=step]{background:#244b80;color:#fff;border-color:#60a5fa}
+main .modelbox,main .nums span{background:#37294b;color:#d8c5ff;border-color:#65528b}
+main .match{background:#203752;color:#b7d6ff}main .match:first-child{background:#183b2b;color:#9ae4b6}
+main .match b,main .angle{color:#b7d6ff}main .match:first-child b{color:#9ae4b6}
+
+}
+</style>
 </head>
 <body><main>
 <header class="hero"><div class="eyebrow">VISUAL AI EXPLAINER</div><h1>Embeddings</h1><p class="lead">Turning <strong>meaning into numbers</strong> so computers can compare ideas.</p></header>

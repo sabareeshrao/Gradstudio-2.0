@@ -1,0 +1,42 @@
+name: Content appearance validation
+on:
+  pull_request:
+    paths: ['content/**', 'scripts/verify-appearance.mjs', '.github/workflows/content-appearance.yml']
+  push:
+    branches: [chatgpt/lesson-appearance-palettes]
+    paths: ['content/**', 'scripts/verify-appearance.mjs', '.github/workflows/content-appearance.yml']
+permissions:
+  contents: read
+jobs:
+  verify-appearance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: sabareeshrao/Gradstudio
+          ref: d8d724c23610ee8c637e1977a3b14c4ed6f00b73
+          path: .appearance-review-app
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: .appearance-review-app/package-lock.json
+      - run: npm ci --prefix .appearance-review-app
+      - run: cd .appearance-review-app && npx playwright install --with-deps chrome
+      - name: Verify every published lesson in a sandbox at two viewport sizes
+        env:
+          PLAYWRIGHT_PACKAGE_JSON: ${{ github.workspace }}/.appearance-review-app/package.json
+        run: node scripts/verify-appearance.mjs
+      - name: Upload sampled lesson appearance evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: lesson-appearance-evidence-${{ github.run_id }}
+          path: appearance-evidence/
+          if-no-files-found: ignore
+          retention-days: 14

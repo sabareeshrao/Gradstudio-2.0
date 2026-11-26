@@ -4,6 +4,36 @@
 <!-- RULE 27: shared compact sizing; original lesson unchanged -->
 <link rel="stylesheet" href="rule-27.css">
 <script defer src="rule-27.js"></script>
+
+<style>
+/* GradStudio appearance: adapt reading surfaces; retain original code and illustration colors. */
+@media (prefers-color-scheme: dark) { html,body{color-scheme:dark;background:#212121;color:#ececec} :root{--bg:#212121;--ink:#ececec;--text:#ececec}   }
+@media (prefers-color-scheme: light) {
+html,body{color-scheme:light;background:#fff;color:#171717}
+:root{--bg:#fff;--panel:#fff;--card:#fff;--ink:#171717;--text:#171717;--muted:#626262;--line:#e5e5e5;--border:#dedede;--surface:#f5f5f5;--soft:#f5f5f5;--blue:#2563eb;--green:#16794a;--purple:#6d28d9;--orange:#a54c00;--red:#b91c1c;--amber:#925500}
+main .card,main .panel,main article,main .tile{background:#fff;color:#171717;border-color:#e5e5e5}
+main .caption,main small,main .muted,main .label,main .legend,main .intro,main .subtitle,main .explain,main .lead,main .brandtxt,main .small,main .bottom{color:#626262}
+main button,main select,main input:not([type=range]):not([type=radio]):not([type=checkbox]){background:#f5f5f5;color:#171717;border-color:#d6d6d6}
+main button.primary,main .primary{background:#171717;color:#fff;border-color:#171717}
+main .detail,main .query,main .variables>div,main .status,main .pill{background:#f5f5f5;color:#171717;border-color:#dedede}
+main .green,main .good,main .correct,main .diffadd{color:#16794a}
+main .red,main .bad,main .incorrect,main .diffdel{color:#b91c1c}
+main .blue,main a{color:#1d4ed8}
+main .orange{color:#a54c00}
+main .purple{color:#6d28d9}
+main pre,main .terminal,main .editor{background:#171717;color:#ececec;border-color:#424242}
+main pre small,main .terminal small{color:#b4b4b4}
+main .terminal .green,main .terminal .good,main .terminal .prompt,main pre .green,main pre .comment{color:#86efac}
+main pre .blue,main .terminal .blue{color:#93c5fd}
+main .bar,main .progress i,main .progress button{background:#e5e5e5}
+main .progress button.active{background:#6d28d9}
+main .bar i{background:#16794a}
+main hr,main td,main th{border-color:#e5e5e5}
+svg.diagram,svg.map,svg.cos-svg,svg.fidelity-svg,article>svg:not(.ico){background:#212121;color:#ececec;border-radius:8px;--ink:#ececec;--text:#ececec;--muted:#b4b4b4;--line:#424242;--blue:#93c5fd;--green:#86efac;--purple:#c4b5fd}
+
+main code{color:#a54c00}main pre code{color:#ffd09b}main .diffadd{color:#16794a}main .diffdel{color:#b91c1c}main svg:not(.ico){--text:#ededed;--muted:#b9b9b9}
+}
+</style>
 </head><body><main>
 <h1>Git Commit</h1><p>Git Commit అంటే మన project లో చేసిన changes ని <strong>ఒక checkpoint లాగా Git history లో record చేయడం.</strong> ప్రతి commit లో staged files యొక్క snapshot, message, author, timestamp మరియు parent commit reference ఉంటాయి.</p>
 <section class="card"><div class="caption">Project history · Each circle is a commit</div><svg class="diagram" viewBox="0 0 340 115" role="img" aria-label="Four commits connected in project history"><path d="M43 49 H297" stroke="#888" stroke-width="2" stroke-dasharray="5 4"/><g text-anchor="middle" font-size="11"><circle cx="43" cy="49" r="17" fill="#6755ac"/><text x="43" y="53">C1</text><text x="43" y="82">Project setup</text><circle cx="128" cy="49" r="17" fill="#6755ac"/><text x="128" y="53">C2</text><text x="128" y="82">Add login</text><circle cx="212" cy="49" r="17" fill="#6755ac"/><text x="212" y="53">C3</text><text x="212" y="82">Add API</text><circle cx="297" cy="49" r="17" fill="#237e50"/><text x="297" y="53">C4</text><text x="297" y="82">Fix bug</text><text x="297" y="15" style="fill:#6ddca0">HEAD / main</text><path d="M297 20 V28" stroke="#6ddca0"/></g></svg><p class="caption">HEAD సాధారణంగా current branch ద్వారా latest checked-out commit ని సూచిస్తుంది.</p></section>

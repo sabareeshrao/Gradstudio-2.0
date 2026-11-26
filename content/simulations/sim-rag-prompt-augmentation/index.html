@@ -5,7 +5,69 @@ main .restored-visual{padding:14px 16px;margin:14px 0;min-height:0;overflow:hidd
 <!-- RULE 27: shared compact sizing; original lesson unchanged -->
 <link rel="stylesheet" href="rule-27.css">
 <script defer src="rule-27.js"></script>
-<style id="fidelity-dark-final">html,body,main,main.canvas{background:#000!important;color:#f5f5f5!important;color-scheme:only dark}html{color-scheme:only dark!important}svg.recovered-visual,main .recovered-visual svg{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;overflow:visible!important}main .recovered-visual{background:#1c1c1c!important;color:#f5f5f5!important}main .recovered-visual svg text{font-family:Arial,sans-serif}pre code span.syn-kw{color:#e5a0e7!important}pre code span.syn-str{color:#a5d6a7!important}pre code span.syn-fn{color:#f3c98b!important}pre code span.syn-type{color:#81b9f9!important}pre code span.syn-builtin{color:#93c5fd!important}pre code span.syn-num{color:#f5a97f!important}pre code span.syn-op{color:#c4b5fd!important}pre code span.syn-comment{color:#a3a3a3!important}</style></head><body><main><h1>Stage 011 — Prompt Augmentation</h1><small>D01 06:10–06:54 · Connecting retrieval with generation</small><p>ఇప్పటివరకు 10 stages పూర్తి చేశాం. Retrieved information ని user question తో కలిపి structured prompt తయారు చేయడమే Prompt Augmentation. RAG లో A — Augmented. LLM కి question మాత్రమే పంపిస్తే external documents తెలియవు. Model weights మార్చడం లేదు; runtime లో evidence అందిస్తున్నాం. Prompt instructions మాత్రమే hallucinations లేదా prompt injection ని పూర్తిగా prevent చేయలేవు.</p><section class="card"><svg class="diagram" viewBox="0 0 340 235"><rect x="8" y="8" width="155" height="52" rx="7" stroke="#60a5fa" fill="#60a5fa" fill-opacity=".1"/><text x="85" y="29" text-anchor="middle" font-size="11">User question</text><text x="85" y="44" text-anchor="middle" font-size="9">What are embeddings?</text><rect x="177" y="8" width="155" height="52" rx="7" stroke="#2dd4bf" fill="#2dd4bf" fill-opacity=".1"/><text x="254" y="29" text-anchor="middle" font-size="11">Retrieved chunks</text><text x="254" y="44" text-anchor="middle" font-size="9">IDs, sources, text</text><path d="M85 60V80H170V96 M254 60V80H170" stroke="currentColor" fill="none" stroke-dasharray="4 3"/><rect x="53" y="96" width="234" height="78" rx="7" stroke="#a78bfa" fill="#a78bfa" fill-opacity=".1"/><text x="170" y="114" text-anchor="middle" font-size="12" font-weight="bold">Augmented prompt</text><text x="170" y="132" text-anchor="middle" font-size="10">System instructions</text><text x="170" y="146" text-anchor="middle" font-size="10">Retrieved context + source IDs</text><text x="170" y="160" text-anchor="middle" font-size="10">User question</text><path d="M170 174V193" stroke="currentColor" stroke-dasharray="4 3"/><rect x="91" y="194" width="158" height="35" rx="6" stroke="#64748b" stroke-dasharray="4 3" fill="none"/><text x="170" y="216" text-anchor="middle" font-size="11">LLM — Stage 012</text></svg></section><h2>1. Normal prompt vs augmented prompt</h2><div class="grid"><div class="tile"><b>Normal prompt</b><p>What are embeddings?</p><div class="arrow">↓</div>LLM<br><small>Existing learned knowledge</small></div><div class="tile"><b>RAG prompt</b><p>Answer using supplied context.</p><p>Embeddings represent text as numerical vectors.</p><p>What are embeddings?</p><div class="arrow">↓</div>LLM<br><small>Retrieved evidence</small></div></div>
+<style id="fidelity-dark-final">html,body,main,main.canvas{background:#000!important;color:#f5f5f5!important;color-scheme:only dark}html{color-scheme:only dark!important}svg.recovered-visual,main .recovered-visual svg{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;overflow:visible!important}main .recovered-visual{background:#1c1c1c!important;color:#f5f5f5!important}main .recovered-visual svg text{font-family:Arial,sans-serif}pre code span.syn-kw{color:#e5a0e7!important}pre code span.syn-str{color:#a5d6a7!important}pre code span.syn-fn{color:#f3c98b!important}pre code span.syn-type{color:#81b9f9!important}pre code span.syn-builtin{color:#93c5fd!important}pre code span.syn-num{color:#f5a97f!important}pre code span.syn-op{color:#c4b5fd!important}pre code span.syn-comment{color:#a3a3a3!important}</style>
+<style>
+/* GradStudio appearance: adapt reading surfaces; retain original code and illustration colors. */
+@media (prefers-color-scheme: dark) { html,body{color-scheme:dark;background:#212121;color:#ececec} :root{--bg:#212121;--fg:#ececec;--ink:#ececec;--text:#ececec} }
+@media (prefers-color-scheme: light) {
+html,body{color-scheme:light;background:#fff;color:#171717}
+:root{--bg:#fff;--fg:#171717;--ink:#171717;--text:#171717;--muted:#626262;--border:#dedede;--line:#e5e5e5;--surface:#f5f5f5;--soft:#f5f5f5;--blue:#2563eb;--green:#16794a;--violet:#6d28d9}
+main .card,main .panel,main .tile{background:#fff;color:#171717;border-color:#e5e5e5}
+main small,main .caption,main .muted,main .arrow,main .flowlabel,main .steplabel,main .status{color:#626262}
+main .good,main .badge,main .new{color:#16794a}main .bad{color:#b91c1c}main a,main .blue{color:#1d4ed8}main .purple{color:#6d28d9}
+main button:not(.copy):not(.qcopy),main select,main textarea,main input[type=text],main input[type=number]{background:#f5f5f5;color:#171717;border-color:#d6d6d6}
+main .controls button.primary{background:#171717;color:#fff;border-color:#171717}
+main code{background:#f1f1f1}
+main .codeblock,main .codebox,main .code,main .terminal{background:#171717;color:#ececec;border-color:#424242}
+main .codeblock pre,main .codebox pre,main .code pre,main .terminal pre{color:#ececec}
+main .codeblock code,main .codebox code,main .code code,main .terminal code{background:transparent}
+main .codehead,main .codebar{background:#303030;color:#d1d1d1}
+main .codehead .copy,main .codebar .copy,main .codebox .copy{color:#ececec;background:transparent;border:0}
+main .terminal small{color:#a3a3a3}
+main .tree-row.new,main .request-body,main .next{background:#f5f5f5;color:#171717}
+main .progress,main .bar,main .rankbar{background:#e5e5e5}
+main .remove{background:#fef2f2;color:#b91c1c}main .add{background:#ecfdf5;color:#16794a}
+main th,main td,main hr,main .qrow,main .kv{border-color:#e5e5e5}
+main .swagger-row.get b{color:#1d4ed8}main .swagger-row.post b{color:#16794a}
+/* Preserve original dark illustration and terminal palettes independently of reading surface. */
+svg.diagram,svg.fidelity-svg,svg.map,svg.cos-svg{background:#212121;color:#ececec;border-radius:8px;--ink:#ececec;--fg:#ececec;--text:#ececec;--muted:#b4b4b4;--line:#424242;--blue:#93c5fd;--green:#86efac;--violet:#c4b5fd}
+
+
+}
+</style>
+
+<style>
+/* The legacy Android-chat fidelity layer forced black with !important.
+   Override only appearance declarations, not layout, code syntax or drawings. */
+@media (prefers-color-scheme: dark) {
+html,body,main,main.canvas{background:#212121!important;color:#ececec!important;color-scheme:dark!important}
+:root{--bg:#212121;--fg:#ececec;--ink:#ececec;--muted:#b4b4b4;--border:#424242;--line:#424242;--soft:#303030;--surface:#303030}
+}
+@media (prefers-color-scheme: light) {
+html,body,main,main.canvas{background:#fff!important;color:#171717!important;color-scheme:light!important}
+:root{--bg:#fff;--fg:#171717;--ink:#171717;--text:#171717;--muted:#626262;--border:#e5e5e5;--line:#e5e5e5;--soft:#f5f5f5;--surface:#f5f5f5;--blue:#2563eb;--green:#16794a;--violet:#6d28d9}
+main .card,main .panel,main .tile{background:#fff!important;color:#171717!important;border-color:#e5e5e5!important}
+main .tile.soft,main .soft{background:#eff6ff!important;color:#1d4ed8!important;border-color:#bfdbfe!important}
+main .tile.green,main .green{color:#16794a!important}main .tile.green{background:#ecfdf5!important;border-color:#bbf7d0!important}
+main .tile.red{background:#fef2f2!important;color:#b91c1c!important;border-color:#fecaca!important}
+main .tile.purple,main .purple{background:#f5f3ff!important;color:#6d28d9!important;border-color:#ddd6fe!important}
+main :is(input,select,textarea){color:#171717!important;background:#f5f5f5!important;border-color:#d6d6d6!important;color-scheme:light!important}
+main .range output,main .label,main small,main .caption{color:#626262!important}
+main a{color:#1d4ed8!important}
+main .bar{background:#e5e5e5!important}
+main button:not(.copy):not(.qcopy){background:#f5f5f5;color:#171717;border-color:#d6d6d6}
+main .controls button.primary{background:#171717;color:#fff;border-color:#171717}
+main .codeblock,main .codebox,main .code,main .terminal{background:#171717!important;color:#ececec!important;border-color:#424242!important}
+main .codehead,main .codebar,main .codebox>.row{background:#303030!important;color:#d1d1d1!important}
+main .codeblock pre,main .codebox pre,main .code pre,main .terminal pre{color:#ececec!important}
+main .codebox .copy,main .codehead .copy,main .codebar .copy{color:#ececec!important;background:transparent!important}
+main .terminal small,main .codeblock small,main .codebox small,main .code small{color:#b4b4b4!important}
+main .recovered-visual{background:#1c1c1c!important;color:#f5f5f5!important;--ink:#ececec;--fg:#ececec;--text:#ececec;--muted:#b4b4b4}
+main .recovered-visual :is(p,small,.caption){color:#ececec!important}
+main .recovered-visual a{color:#93c5fd!important}
+}
+</style>
+</head><body><main><h1>Stage 011 — Prompt Augmentation</h1><small>D01 06:10–06:54 · Connecting retrieval with generation</small><p>ఇప్పటివరకు 10 stages పూర్తి చేశాం. Retrieved information ని user question తో కలిపి structured prompt తయారు చేయడమే Prompt Augmentation. RAG లో A — Augmented. LLM కి question మాత్రమే పంపిస్తే external documents తెలియవు. Model weights మార్చడం లేదు; runtime లో evidence అందిస్తున్నాం. Prompt instructions మాత్రమే hallucinations లేదా prompt injection ని పూర్తిగా prevent చేయలేవు.</p><section class="card"><svg class="diagram" viewBox="0 0 340 235"><rect x="8" y="8" width="155" height="52" rx="7" stroke="#60a5fa" fill="#60a5fa" fill-opacity=".1"/><text x="85" y="29" text-anchor="middle" font-size="11">User question</text><text x="85" y="44" text-anchor="middle" font-size="9">What are embeddings?</text><rect x="177" y="8" width="155" height="52" rx="7" stroke="#2dd4bf" fill="#2dd4bf" fill-opacity=".1"/><text x="254" y="29" text-anchor="middle" font-size="11">Retrieved chunks</text><text x="254" y="44" text-anchor="middle" font-size="9">IDs, sources, text</text><path d="M85 60V80H170V96 M254 60V80H170" stroke="currentColor" fill="none" stroke-dasharray="4 3"/><rect x="53" y="96" width="234" height="78" rx="7" stroke="#a78bfa" fill="#a78bfa" fill-opacity=".1"/><text x="170" y="114" text-anchor="middle" font-size="12" font-weight="bold">Augmented prompt</text><text x="170" y="132" text-anchor="middle" font-size="10">System instructions</text><text x="170" y="146" text-anchor="middle" font-size="10">Retrieved context + source IDs</text><text x="170" y="160" text-anchor="middle" font-size="10">User question</text><path d="M170 174V193" stroke="currentColor" stroke-dasharray="4 3"/><rect x="91" y="194" width="158" height="35" rx="6" stroke="#64748b" stroke-dasharray="4 3" fill="none"/><text x="170" y="216" text-anchor="middle" font-size="11">LLM — Stage 012</text></svg></section><h2>1. Normal prompt vs augmented prompt</h2><div class="grid"><div class="tile"><b>Normal prompt</b><p>What are embeddings?</p><div class="arrow">↓</div>LLM<br><small>Existing learned knowledge</small></div><div class="tile"><b>RAG prompt</b><p>Answer using supplied context.</p><p>Embeddings represent text as numerical vectors.</p><p>What are embeddings?</p><div class="arrow">↓</div>LLM<br><small>Retrieved evidence</small></div></div>
 <h2>Step 1 — Create prompt_builder.py</h2><small>D01 06:10</small><p>VS Code project root లో కొత్త file create చెయ్యి. Existing retriever.py, search.py unchanged.</p><section class="card restored-visual" data-visual="full-file-tree"><div class="visual-tree">📂 rag-from-scratch
    📁 .venv
    📁 data
