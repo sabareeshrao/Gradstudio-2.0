@@ -4,13 +4,13 @@
   "id": "sim-gpu-interactive",
   "title": "GPU — Interactive Visual Study",
   "slug": "gpu-interactive",
-  "order": 2,
+  "order": 3,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-machine-learning",
-  "section_id": "section-machine-learning",
+  "course_id": "course-ai-engineering",
+  "section_id": "section-gpu-computing",
   "entrypoint": "index.html",
   "assets": [
     "script-1.js"

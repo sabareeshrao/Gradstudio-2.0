@@ -2,14 +2,14 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-rag-semantic-search",
-  "title": "Semantic Search",
+  "title": "09. Implement Semantic Search",
   "slug": "rag-semantic-search",
   "order": 9,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-rag-from-scratch",
+  "course_id": "course-ai-engineering",
   "section_id": "section-rag-from-scratch",
   "entrypoint": "index.html",
   "assets": [

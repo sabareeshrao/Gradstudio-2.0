@@ -2,15 +2,15 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-gpu-idea-driven",
-  "title": "GPU — Recreating the invention",
+  "title": "GPU — Recreating the Invention (25 Idea Cards)",
   "slug": "gpu-idea-driven",
-  "order": 100,
+  "order": 1,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-machine-learning",
-  "section_id": "section-machine-learning",
+  "course_id": "course-ai-engineering",
+  "section_id": "section-gpu-computing",
   "entrypoint": "index.html",
   "assets": [],
   "capabilities": {

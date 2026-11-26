@@ -2,14 +2,14 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-rag-cosine-similarity",
-  "title": "Cosine Similarity",
+  "title": "08. Calculate Cosine Similarity",
   "slug": "rag-cosine-similarity",
   "order": 8,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-rag-from-scratch",
+  "course_id": "course-ai-engineering",
   "section_id": "section-rag-from-scratch",
   "entrypoint": "index.html",
   "assets": [

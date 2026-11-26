@@ -2,14 +2,14 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-llm",
-  "title": "Large Language Models (LLM)",
+  "title": "Large Language Models (LLMs)",
   "slug": "llm",
-  "order": 1,
+  "order": 2,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-generative-ai",
+  "course_id": "course-ai-engineering",
   "section_id": "section-generative-ai",
   "entrypoint": "index.html",
   "assets": [

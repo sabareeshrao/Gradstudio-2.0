@@ -2,14 +2,14 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-embedding",
-  "title": "Embeddings",
+  "title": "Embeddings — Representing Data as Vectors",
   "slug": "embedding",
-  "order": 4,
+  "order": 2,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-machine-learning",
+  "course_id": "course-ai-engineering",
   "section_id": "section-machine-learning",
   "entrypoint": "index.html",
   "assets": [

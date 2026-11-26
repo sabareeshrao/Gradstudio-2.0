@@ -2,9 +2,9 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-ai-vs-agi",
-  "title": "AI vs AGI",
+  "title": "Artificial Intelligence vs. AGI",
   "slug": "ai-vs-agi",
-  "order": 4,
+  "order": 2,
   "status": "published",
   "access": {
     "display": "open"

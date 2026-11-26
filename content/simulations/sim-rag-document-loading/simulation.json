@@ -2,14 +2,14 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-rag-document-loading",
-  "title": "Knowledge Base & Document Loading",
+  "title": "02. Load a Document",
   "slug": "rag-document-loading",
   "order": 2,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-rag-from-scratch",
+  "course_id": "course-ai-engineering",
   "section_id": "section-rag-from-scratch",
   "entrypoint": "index.html",
   "assets": [

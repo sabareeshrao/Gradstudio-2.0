@@ -2,9 +2,9 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-ai-engineer",
-  "title": "What is an AI Engineer?",
+  "title": "What Does an AI Engineer Do?",
   "slug": "ai-engineer",
-  "order": 2,
+  "order": 3,
   "status": "published",
   "access": {
     "display": "open"
