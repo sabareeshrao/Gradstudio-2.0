@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browser Rendering Pipeline</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #172033;
+      background: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #ffffff 0%, #f7f8fc 52%, #fff7ed 100%);
+    }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 52px 0 64px;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #b54708;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      color: #101828;
+      font-size: clamp(2.35rem, 7vw, 5rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+    }
+
+    .lead {
+      max-width: 720px;
+      margin: 24px 0 38px;
+      color: #475467;
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      line-height: 1.7;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid #e4e7ec;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 20px 55px rgba(16, 24, 40, 0.08);
+    }
+
+    .stage {
+      position: relative;
+      min-height: 210px;
+      padding: 22px 18px;
+      overflow: hidden;
+      border-radius: 16px;
+      background: #f9fafb;
+    }
+
+    .stage::after {
+      content: "";
+      position: absolute;
+      inset: auto 18px 18px;
+      height: 5px;
+      border-radius: 99px;
+      background: var(--accent);
+    }
+
+    .stage-number {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 12px;
+      color: #ffffff;
+      background: var(--accent);
+      font-weight: 800;
+    }
+
+    h2 {
+      margin: 24px 0 8px;
+      color: #101828;
+      font-size: 1.05rem;
+    }
+
+    .stage p {
+      margin: 0;
+      color: #667085;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .stage:nth-child(1) { --accent: #7f56d9; }
+    .stage:nth-child(2) { --accent: #2e90fa; }
+    .stage:nth-child(3) { --accent: #12b76a; }
+    .stage:nth-child(4) { --accent: #f79009; }
+    .stage:nth-child(5) { --accent: #f04438; }
+
+    .insight {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .card {
+      padding: 24px;
+      border: 1px solid #e4e7ec;
+      border-radius: 18px;
+      background: #ffffff;
+    }
+
+    .card h2 { margin-top: 0; }
+    .card p { margin: 0; color: #475467; line-height: 1.65; }
+
+    .metric {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .metric strong { color: #b54708; font-size: 2rem; }
+    .metric span { color: #667085; }
+
+    @media (max-width: 880px) {
+      .pipeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stage:last-child { grid-column: 1 / -1; }
+      .insight { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 520px) {
+      main { width: min(100% - 20px, 1120px); padding-top: 32px; }
+      .pipeline { grid-template-columns: 1fr; padding: 12px; }
+      .stage, .stage:last-child { grid-column: auto; min-height: 170px; }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root { color: #f2f4f7; background: #000000; }
+      body { background: linear-gradient(145deg, #101114 0%, #161923 55%, #24180e 100%); }
+      h1, h2 { color: #ffffff; }
+      .lead, .stage p, .card p, .metric span { color: #d0d5dd; }
+      .pipeline { border-color: #344054; background: rgba(16, 24, 40, 0.9); }
+      .stage { background: #1d2939; }
+      .card { border-color: #344054; background: #101828; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Web Platform Foundations</p>
+    <h1>From HTML to pixels.</h1>
+    <p class="lead">A browser turns source files into a visible page through five connected stages. Each stage produces information the next stage can use.</p>
+
+    <section class="pipeline" aria-label="Five stages of the browser rendering pipeline">
+      <article class="stage">
+        <span class="stage-number">1</span>
+        <h2>Parse</h2>
+        <p>HTML becomes the DOM and CSS becomes the CSSOM.</p>
+      </article>
+      <article class="stage">
+        <span class="stage-number">2</span>
+        <h2>Style</h2>
+        <p>Selectors and inheritance resolve into computed styles.</p>
+      </article>
+      <article class="stage">
+        <span class="stage-number">3</span>
+        <h2>Layout</h2>
+        <p>The browser calculates each visible box's size and position.</p>
+      </article>
+      <article class="stage">
+        <span class="stage-number">4</span>
+        <h2>Paint</h2>
+        <p>Text, colors, borders, and shadows become drawing commands.</p>
+      </article>
+      <article class="stage">
+        <span class="stage-number">5</span>
+        <h2>Composite</h2>
+        <p>Layers combine on the GPU to create the final frame.</p>
+      </article>
+    </section>
+
+    <section class="insight" aria-label="Rendering performance guidance">
+      <article class="card">
+        <h2>Why this matters</h2>
+        <p>Changing layout-affecting properties can repeat style, layout, paint, and composite work. Transform and opacity changes can often stay in the compositor.</p>
+      </article>
+      <article class="card">
+        <h2>Frame budget</h2>
+        <p>At 60 frames per second, the browser has roughly:</p>
+        <div class="metric"><strong>16.7 ms</strong><span>to prepare each frame</span></div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
