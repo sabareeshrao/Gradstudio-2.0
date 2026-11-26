@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "course",
+  "id": "course-ai-engineering",
+  "title": "AI Engineering",
+  "slug": "ai-engineering",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "category_id": "cat-artificial-intelligence"
+}
