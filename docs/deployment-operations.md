@@ -20,7 +20,7 @@ Do not store the token as a repository variable or put it in `wrangler.jsonc`. D
 
 ## Automated staging release
 
-On a trusted push to `main`, the workflow:
+On a trusted push to `main` or an explicit trusted dispatch after an automated routine merge, the workflow:
 
 1. verifies the checkout is still the exact remote-main commit;
 2. validates non-production origin/account inputs without printing the token;
@@ -41,6 +41,10 @@ A retry of the same source commit reuses the prior verified change-impact eviden
 ## Routine and sensitive changes
 
 Routine content changes are manifest/source edits that stay within existing schemas, capabilities, budgets, and published parent relationships. Once staging and production automation are authorized, validated routine changes may deploy automatically.
+
+The current staging automation uses a trusted default-branch `workflow_run`. It accepts only same-repository, non-draft pull requests whose immutable diff contains regular files solely under the five educational source roots. It waits for both credential-free content validation and appearance validation, honors requested-change reviews, squashes the exact head SHA, and explicitly dispatches staging. Schema, compiler, workflow, Worker, Wrangler, and policy changes are never eligible. GitHub's repository-level auto-merge feature is not required, and pull-request code never receives a deployment credential.
+
+Appearance validation is incremental: hierarchy-only metadata changes skip unchanged lesson rendering, simulation changes test only affected stable IDs at desktop and mobile widths, and shared/test-policy changes run the complete library. A scheduled weekly full-library regression preserves broad coverage. The runner-provided Chrome installation removes the previous repeated browser download.
 
 The following remain sensitive and require explicit review/authorization: workflow or Wrangler changes; token/permission/account/origin changes; schema or compiler semantics; Worker/CSP/sandbox/network capability changes; operational data access; production routes; initial production cutover; and destructive derived-content cleanup.
 
