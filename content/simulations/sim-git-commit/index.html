@@ -34,6 +34,16 @@ svg.diagram,svg.map,svg.cos-svg,svg.fidelity-svg,article>svg:not(.ico){backgroun
 main code{color:#a54c00}main pre code{color:#ffd09b}main .diffadd{color:#16794a}main .diffdel{color:#b91c1c}main svg:not(.ico){--text:#ededed;--muted:#b9b9b9}
 }
 </style>
+
+<style id="gradstudio-dark-palette">
+/* Pure black page, ChatGPT-style gray cards. Preserve light mode and educational artwork. */
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#000000; --background:#000000; --card:#212121; --panel:#212121; --surface:#2b2b2b; --soft:#2b2b2b; }
+  html,body { background:#000000 !important; }
+  main,main.canvas { background-color:#000000; }
+  main .card:not(.active):not(.selected):not(.correct):not(.incorrect),main .panel:not(.active):not(.selected),main article { background-color:#212121; }
+}
+</style>
 </head><body><main>
 <h1>Git Commit</h1><p>Git Commit అంటే మన project లో చేసిన changes ని <strong>ఒక checkpoint లాగా Git history లో record చేయడం.</strong> ప్రతి commit లో staged files యొక్క snapshot, message, author, timestamp మరియు parent commit reference ఉంటాయి.</p>
 <section class="card"><div class="caption">Project history · Each circle is a commit</div><svg class="diagram" viewBox="0 0 340 115" role="img" aria-label="Four commits connected in project history"><path d="M43 49 H297" stroke="#888" stroke-width="2" stroke-dasharray="5 4"/><g text-anchor="middle" font-size="11"><circle cx="43" cy="49" r="17" fill="#6755ac"/><text x="43" y="53">C1</text><text x="43" y="82">Project setup</text><circle cx="128" cy="49" r="17" fill="#6755ac"/><text x="128" y="53">C2</text><text x="128" y="82">Add login</text><circle cx="212" cy="49" r="17" fill="#6755ac"/><text x="212" y="53">C3</text><text x="212" y="82">Add API</text><circle cx="297" cy="49" r="17" fill="#237e50"/><text x="297" y="53">C4</text><text x="297" y="82">Fix bug</text><text x="297" y="15" style="fill:#6ddca0">HEAD / main</text><path d="M297 20 V28" stroke="#6ddca0"/></g></svg><p class="caption">HEAD సాధారణంగా current branch ద్వారా latest checked-out commit ని సూచిస్తుంది.</p></section>

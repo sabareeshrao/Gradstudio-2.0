@@ -98,6 +98,16 @@ main .recovered-visual :is(p,small,.caption){color:#ececec!important}
 main .recovered-visual a{color:#93c5fd!important}
 }
 </style>
+
+<style id="gradstudio-dark-palette">
+/* Pure black page, ChatGPT-style gray cards. Preserve light mode and educational artwork. */
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#000000; --background:#000000; --card:#212121; --panel:#212121; --surface:#2b2b2b; --soft:#2b2b2b; }
+  html,body { background:#000000 !important; }
+  main,main.canvas { background-color:#000000; }
+  main .card:not(.active):not(.selected):not(.correct):not(.incorrect),main .panel:not(.active):not(.selected),main article { background-color:#212121; }
+}
+</style>
 </head><body><main><header><h1>Stage 009 — Semantic Search</h1><small>D01 04:41 onwards · Search engine implementation</small></header>
 <p>GitHub లో Stage 008 వరకు ఉన్న source code, timeline పరిశీలించాను. మొత్తం 280 timestamp actions ఉన్నాయి. Handover లో ఇచ్చిన commit కూడా match అయింది.</p>
 <p>ఇప్పటివరకు మన RAG application documents ని numerical vectors గా convert చేయగలదు. రెండు vectors మధ్య similarity కూడా calculate చేయగలదు. కానీ ఇప్పటివరకు మనం user నుంచి question తీసుకోలేదు. ఈ stage నుంచి మన application ఒక చిన్న <strong>AI-powered search engine</strong> లాగా పనిచేస్తుంది.</p><div class="wide-grid"><div class="wide-unit">

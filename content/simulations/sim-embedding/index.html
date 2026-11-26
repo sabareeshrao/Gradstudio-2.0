@@ -102,6 +102,16 @@ main .match b,main .angle{color:#b7d6ff}main .match:first-child b{color:#9ae4b6}
 
 }
 </style>
+
+<style id="gradstudio-dark-palette">
+/* Pure black page, ChatGPT-style gray cards. Preserve light mode and educational artwork. */
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#000000; --background:#000000; --card:#212121; --panel:#212121; --surface:#2b2b2b; --soft:#2b2b2b; }
+  html,body { background:#000000 !important; }
+  main,main.canvas { background-color:#000000; }
+  main .card:not(.active):not(.selected):not(.correct):not(.incorrect),main .panel:not(.active):not(.selected),main article { background-color:#212121; }
+}
+</style>
 </head>
 <body><main>
 <header class="hero"><div class="eyebrow">VISUAL AI EXPLAINER</div><h1>Embeddings</h1><p class="lead">Turning <strong>meaning into numbers</strong> so computers can compare ideas.</p></header>

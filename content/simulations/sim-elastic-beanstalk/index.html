@@ -93,6 +93,16 @@ svg.diagram text,svg.map text,svg.cos-svg text,svg.fidelity-svg text{color:#1720
 
 }
 </style>
+
+<style id="gradstudio-dark-palette">
+/* Pure black page, ChatGPT-style gray cards. Preserve light mode and educational artwork. */
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#000000; --background:#000000; --card:#212121; --panel:#212121; --surface:#2b2b2b; --soft:#2b2b2b; }
+  html,body { background:#000000 !important; }
+  main,main.canvas { background-color:#000000; }
+  main .card:not(.active):not(.selected):not(.correct):not(.incorrect),main .panel:not(.active):not(.selected),main article { background-color:#212121; }
+}
+</style>
 </head><body><main><h1>AWS Elastic Beanstalk</h1><p>Elastic Beanstalk is an AWS service that deploys your application and automatically provisions and manages the infrastructure needed to run it.</p><p><strong>You build the application. Beanstalk handles much of the infrastructure.</strong></p>
 <section class="card deployment"><h3>Elastic Beanstalk architecture</h3><div class="caption">Standard mode · Load-balanced web environment</div><div class="split deployment-split"><div class="visual"><svg id="arch" class="diagram" viewBox="0 0 340 350" role="img" aria-label="Spring Boot application deployment to load-balanced EC2 environment"></svg></div><div class="walkthrough"><div class="row between caption"><span>Interactive deployment</span><span id="counter"></span></div><div id="progress" class="progress"></div><h3 id="stepTitle"></h3><div class="caption" id="stepDesc"></div><div class="panel" id="detail" aria-live="polite"></div><div class="controls"><button class="secondary" id="prev">Previous</button><button id="next">Next step ›</button></div></div></div></section>
 <h2>Auto Scaling simulator</h2><section class="card scaling-card"><div class="split scaling-split"><div class="scaling-controls"><div class="row between"><label for="traffic" class="caption">Incoming traffic</label><div><output class="number" id="trafficValue" for="traffic">300</output> <span class="caption">req/sec</span></div></div><input id="traffic" type="range" min="100" max="1500" step="50" value="300"><svg id="scaling" class="diagram" viewBox="0 0 330 190" role="img" aria-label="Load balancer distributes traffic to active instances"></svg><div class="two"><div><div class="caption">Active instances</div><div class="number" id="instanceCount"></div></div><div><div class="caption">Requests per instance</div><div class="number" id="perInstance"></div></div></div><div class="bar"><i id="capacity"></i></div><p id="status" aria-live="polite"></p><p class="caption">Illustrative capacity: 250 requests/sec per instance. Real scaling depends on configured metrics, policies and warm-up time.</p><div class="presets"><button class="secondary" data-traffic="150">Low traffic</button><button class="secondary" data-traffic="800">Busy</button><button class="secondary" data-traffic="1500">Traffic spike</button></div></div></div></section>
