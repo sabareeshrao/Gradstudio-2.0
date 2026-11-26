@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-aws-s3-idea-driven",
+  "title": "AWS S3 — Idea-Based Learning",
+  "slug": "aws-s3-idea-driven",
+  "order": 8,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-aws",
+  "section_id": "section-aws",
+  "entrypoint": "index.html",
+  "assets": [],
+  "capabilities": {
+    "network_origins": []
+  }
+}
