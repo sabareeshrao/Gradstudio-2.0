@@ -49,7 +49,7 @@ ChatGPT/Codex connected to GitHub will be the founder's everyday content adminis
 
 Use unpublish/retire plus Git history for normal removal. Never place credentials, customer records, student progress, payments, private analytics, access tokens, or administrative secrets in this public repository.
 
-Read [AGENTS.md](AGENTS.md) before making changes. For daily natural-language operations, follow [docs/prompt-operations.md](docs/prompt-operations.md). Validate locally with `npm ci && npm run validate`.
+Read [AGENTS.md](AGENTS.md) before making changes. For AI lesson authoring, GitHub Pages preview links, exact dark-mode palette and chat-to-HTML fidelity, follow the [lesson creation and Pages handover](docs/lesson-pages-handover.md). For daily natural-language operations, follow [docs/prompt-operations.md](docs/prompt-operations.md). Validate locally with `npm ci && npm run validate`.
 
 The delivery implementation is documented in [docs/static-assets-worker.md](docs/static-assets-worker.md), and staging/release controls are documented in [docs/deployment-operations.md](docs/deployment-operations.md).
 

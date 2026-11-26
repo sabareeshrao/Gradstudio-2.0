@@ -17,7 +17,7 @@ Do not move application UI or backend code into this repository. A simulation's 
 
 ## Read before changing anything
 
-1. Read this file and README.md.
+1. Read this file and README.md. For all lesson creation, chat exports, appearance changes and GitHub Pages links, also read [docs/lesson-pages-handover.md](docs/lesson-pages-handover.md) and follow its rules (pure black page, dark gray cards, fidelity and deployment verification).
 2. Read the current schema, validation, and workflow documentation once those files exist.
 3. Check the private master implementation tracker and latest founder decision for any change involving architecture, schema, deployment, or repository boundaries.
 4. Inspect Git status/current branch and preserve unrelated work.
