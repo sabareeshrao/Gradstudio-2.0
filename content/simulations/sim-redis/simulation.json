@@ -12,12 +12,7 @@
   "course_id": "course-databases",
   "section_id": "section-databases",
   "entrypoint": "index.html",
-  "assets": [
-    "script-1.js",
-    "script-2.js",
-    "rule-27.css",
-    "rule-27.js"
-  ],
+  "assets": [],
   "capabilities": {
     "network_origins": []
   }
