@@ -61,6 +61,38 @@ main .progress button{min-height:18px!important}
 <!-- RULE 27: shared compact sizing; original lesson unchanged -->
 <link rel="stylesheet" href="rule-27.css">
 <script defer src="rule-27.js"></script>
+
+<style>
+/* GradStudio appearance: preserve the original light lesson; adapt its reading surfaces for dark. */
+@media (prefers-color-scheme: light) { html,body{color-scheme:light;background:#fff} }
+@media (prefers-color-scheme: dark) {
+html,body{color-scheme:dark;background:#212121;color:#ececec}
+:root{--bg:#212121;--card:#262626;--ink:#ececec;--muted:#b4b4b4;--line:#424242;--border:#424242}
+main .card,main .panel,main .message{background:#262626;color:#ececec;border-color:#424242}
+main .tile,main .outline,main .jitbox,main .op,main .output,main .work,main .status,main .session{background:#303030;color:#ececec;border-color:#505050}
+main .caption,main small,main .label,main .muted,main .note,main .arrow,main .tech .value,main th{color:#b4b4b4}
+main .blue,main .soft,main .jitbox.active{background:#203752;color:#b7d6ff;border-color:#426187}
+main .purple,main .jitbox.hot,main .vector span{background:#37294b;color:#d8c5ff;border-color:#65528b}
+main .green,main .status.active{background:#183b2b;color:#9ae4b6;border-color:#37674b}
+main .red{background:#48292e;color:#ffb4b4;border-color:#78454b}
+main .orange{background:#483420;color:#ffd09b;border-color:#795838}
+main .progress i,main .progress span,main .bar,main .track{background:#424242}
+main .progress .on i,main .progress span.on{background:#60a5fa}
+main button.secondary,main button.alt,main .seg button,main .stage,main input:not([type=range]),main textarea,main select{background:#303030;color:#ececec;border-color:#505050}
+main .seg button[aria-pressed=true],main .stage.active{background:#244b80;color:#fff;border-color:#60a5fa}
+main pre,main .codebox,main .codebox pre,main .terminal{background:#171717;color:#ececec;border-color:#424242}
+main code{color:inherit}
+main td,main th,main hr,main .tech,main .listrow{border-color:#424242}
+main a,main .glyph,main .temp{color:#93c5fd}
+main .check,main .good,main .metric,main .generated strong{color:#86efac}
+main .bad{color:#fca5a5}
+/* Retain original diagram palettes on a neutral light illustration surface. */
+svg.diagram,svg.map,svg.cos-svg,svg.fidelity-svg{background:#fff;color:#172033;border-radius:8px}
+svg.diagram text,svg.map text,svg.cos-svg text,svg.fidelity-svg text{color:#172033}
+
+
+}
+</style>
 </head><body><main><h1>AWS Elastic Beanstalk</h1><p>Elastic Beanstalk is an AWS service that deploys your application and automatically provisions and manages the infrastructure needed to run it.</p><p><strong>You build the application. Beanstalk handles much of the infrastructure.</strong></p>
 <section class="card deployment"><h3>Elastic Beanstalk architecture</h3><div class="caption">Standard mode · Load-balanced web environment</div><div class="split deployment-split"><div class="visual"><svg id="arch" class="diagram" viewBox="0 0 340 350" role="img" aria-label="Spring Boot application deployment to load-balanced EC2 environment"></svg></div><div class="walkthrough"><div class="row between caption"><span>Interactive deployment</span><span id="counter"></span></div><div id="progress" class="progress"></div><h3 id="stepTitle"></h3><div class="caption" id="stepDesc"></div><div class="panel" id="detail" aria-live="polite"></div><div class="controls"><button class="secondary" id="prev">Previous</button><button id="next">Next step ›</button></div></div></div></section>
 <h2>Auto Scaling simulator</h2><section class="card scaling-card"><div class="split scaling-split"><div class="scaling-controls"><div class="row between"><label for="traffic" class="caption">Incoming traffic</label><div><output class="number" id="trafficValue" for="traffic">300</output> <span class="caption">req/sec</span></div></div><input id="traffic" type="range" min="100" max="1500" step="50" value="300"><svg id="scaling" class="diagram" viewBox="0 0 330 190" role="img" aria-label="Load balancer distributes traffic to active instances"></svg><div class="two"><div><div class="caption">Active instances</div><div class="number" id="instanceCount"></div></div><div><div class="caption">Requests per instance</div><div class="number" id="perInstance"></div></div></div><div class="bar"><i id="capacity"></i></div><p id="status" aria-live="polite"></p><p class="caption">Illustrative capacity: 250 requests/sec per instance. Real scaling depends on configured metrics, policies and warm-up time.</p><div class="presets"><button class="secondary" data-traffic="150">Low traffic</button><button class="secondary" data-traffic="800">Busy</button><button class="secondary" data-traffic="1500">Traffic spike</button></div></div></div></section>
