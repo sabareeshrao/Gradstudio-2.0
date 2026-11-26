@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "course",
+  "id": "course-java-stringbuilder",
+  "title": "StringBuilder",
+  "slug": "java-stringbuilder",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "category_id": "cat-latest-additions"
+}
