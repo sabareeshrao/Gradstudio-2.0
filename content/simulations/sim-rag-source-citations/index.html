@@ -33,6 +33,38 @@ svg.diagram,svg.fidelity-svg,svg.map,svg.cos-svg{background:#212121;color:#ecece
 main .comment{color:#a3a3a3}main .gold{color:#8a5100}main .tag{color:#626262}main .codebar button.copy{background:transparent;color:#ececec}
 }
 </style>
+
+<style>
+/* The legacy Android-chat fidelity layer forced black with !important.
+   Override only appearance declarations, not layout, code syntax or drawings. */
+@media (prefers-color-scheme: dark) {
+html,body,main,main.canvas{background:#212121!important;color:#ececec!important;color-scheme:dark!important}
+:root{--bg:#212121;--fg:#ececec;--ink:#ececec;--muted:#b4b4b4;--border:#424242;--line:#424242;--soft:#303030;--surface:#303030}
+}
+@media (prefers-color-scheme: light) {
+html,body,main,main.canvas{background:#fff!important;color:#171717!important;color-scheme:light!important}
+:root{--bg:#fff;--fg:#171717;--ink:#171717;--text:#171717;--muted:#626262;--border:#e5e5e5;--line:#e5e5e5;--soft:#f5f5f5;--surface:#f5f5f5;--blue:#2563eb;--green:#16794a;--violet:#6d28d9}
+main .card,main .panel,main .tile{background:#fff!important;color:#171717!important;border-color:#e5e5e5!important}
+main .tile.soft,main .soft{background:#eff6ff!important;color:#1d4ed8!important;border-color:#bfdbfe!important}
+main .tile.green,main .green{color:#16794a!important}main .tile.green{background:#ecfdf5!important;border-color:#bbf7d0!important}
+main .tile.red{background:#fef2f2!important;color:#b91c1c!important;border-color:#fecaca!important}
+main .tile.purple,main .purple{background:#f5f3ff!important;color:#6d28d9!important;border-color:#ddd6fe!important}
+main :is(input,select,textarea){color:#171717!important;background:#f5f5f5!important;border-color:#d6d6d6!important;color-scheme:light!important}
+main .range output,main .label,main small,main .caption{color:#626262!important}
+main a{color:#1d4ed8!important}
+main .bar{background:#e5e5e5!important}
+main button:not(.copy):not(.qcopy){background:#f5f5f5;color:#171717;border-color:#d6d6d6}
+main .controls button.primary{background:#171717;color:#fff;border-color:#171717}
+main .codeblock,main .codebox,main .code,main .terminal{background:#171717!important;color:#ececec!important;border-color:#424242!important}
+main .codehead,main .codebar,main .codebox>.row{background:#303030!important;color:#d1d1d1!important}
+main .codeblock pre,main .codebox pre,main .code pre,main .terminal pre{color:#ececec!important}
+main .codebox .copy,main .codehead .copy,main .codebar .copy{color:#ececec!important;background:transparent!important}
+main .terminal small,main .codeblock small,main .codebox small,main .code small{color:#b4b4b4!important}
+main .recovered-visual{background:#1c1c1c!important;color:#f5f5f5!important;--ink:#ececec;--fg:#ececec;--text:#ececec;--muted:#b4b4b4}
+main .recovered-visual :is(p,small,.caption){color:#ececec!important}
+main .recovered-visual a{color:#93c5fd!important}
+}
+</style>
 </head><body><main><small>STAGE 014 · D01 08:11–08:56</small><h1>Source Citations</h1><p>LLM ఇచ్చిన answer లోని citation ID నిజంగా retrieve చేసిన chunks లో ఉందో తెలుసుకోవాలి. ID match factual verification కాదు.</p><h2>1. Source citations ఎందుకు అవసరం?</h2><p>మన RAG application ఇప్పటికే LLM ద్వారా answer generate చేస్తోంది. కానీ ఆ answer ఏ document ఆధారంగా generate అయిందో user ఎలా తెలుసుకోవాలి?</p><p><strong>What are embeddings?</strong></p><div class="panel" id="citation-example"><div>Embeddings represent text as numerical vectors. [rag.txt:1]</div><hr style="border:0;border-top:1px solid #444"><div class="source-meta"><span style="color:#60a5fa">▤</span><strong>rag.txt</strong><small>Chunk 1</small></div><p>Embeddings represent text as numerical vectors.</p><small>Illustrative answer, not a live model response.</small></div><p>LLM retrieve చేయని document ID ని కూడా generate చేయవచ్చు. అందుకే citation validation అవసరం.</p><div class="panel"><svg viewBox="0 0 340 244" role="img" aria-label="Citation validation flow"><g fill="#262626" stroke="#60a5fa"><rect x="65" y="8" width="210" height="40" rx="6"/><rect x="58" y="73" width="224" height="52" rx="6" stroke="#a78bfa"/><rect x="8" y="166" width="148" height="66" rx="6" stroke="#22c55e"/><rect x="184" y="166" width="148" height="66" rx="6" stroke="#ef4444"/></g><g stroke="#a3a3a3" stroke-dasharray="4 3" fill="none"><path d="M170 48 V73 M170 125 V145 H82 V166 M170 145 H258 V166"/></g><g fill="#ececec" font-size="11" text-anchor="middle"><text x="170" y="25">Generated answer</text><text x="170" y="39">Extract citation IDs</text><text x="170" y="94">Compare with retrieved chunks</text><text x="170" y="111">Does exact ID exist?</text><text x="82" y="157" fill="#86efac">Yes</text><text x="258" y="157" fill="#fca5a5">No</text><text x="82" y="187">Known ID</text><text x="82" y="205">Display source text</text><text x="82" y="220">rag.txt:1</text><text x="258" y="187">Unknown ID</text><text x="258" y="205">Display warning</text><text x="258" y="220">missing.txt:99</text></g></svg></div>
 <p><strong>Important:</strong> Citation ID నిజంగా exist అవ్వడం, ఆ source answer లోని claim ని factually support చేయడం రెండూ వేర్వేరు విషయాలు. ఈ stage లో ID validation implement చేస్తున్నాం; factual verification కాదు.</p><h2>1. Create citations.py</h2><p>Project root లో కొత్త file create చెయ్యి. re standard library module; కొత్త dependency అవసరం లేదు.</p><div class="panel" id="file-explorer"><small>VS CODE EXPLORER</small><div class="file-tree"><strong>▾ ▰ rag-from-scratch</strong><div class="child"><span style="color:#dba84c">▰</span> data/</div><div class="child"><span style="color:#dba84c">▰</span> storage/</div><div class="child"><span style="color:#60a5fa">▤</span> answer.py</div><div class="child"><span style="color:#60a5fa">▤</span> chunker.py</div><div class="child"><span style="color:#60a5fa">▤</span> embedder.py</div><div class="child"><span style="color:#60a5fa">▤</span> llm.py</div><div class="child"><span style="color:#60a5fa">▤</span> loader.py</div><div class="child"><span style="color:#60a5fa">▤</span> main.py</div><div class="child"><span style="color:#60a5fa">▤</span> preprocessor.py</div><div class="child"><span style="color:#60a5fa">▤</span> prompt_builder.py</div><div class="child"><span style="color:#60a5fa">▤</span> retriever.py</div><div class="child"><span style="color:#60a5fa">▤</span> search.py</div><div class="child"><span style="color:#60a5fa">▤</span> similarity.py</div><div class="child"><span style="color:#60a5fa">▤</span> vector_store.py</div><div class="new"><span>▤ citations.py</span><small class="good">NEW</small></div></div></div><div class="code"><div class="bar"><span>Pattern</span><button type="button" class="copy">Copy</button></div><pre><code><span class="syn-kw" style="color:#e5a0e7!important">import</span> re
 

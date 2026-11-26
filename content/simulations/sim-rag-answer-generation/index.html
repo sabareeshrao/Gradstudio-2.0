@@ -35,6 +35,38 @@ svg.diagram,svg.fidelity-svg,svg.map,svg.cos-svg{background:#212121;color:#ecece
 
 }
 </style>
+
+<style>
+/* The legacy Android-chat fidelity layer forced black with !important.
+   Override only appearance declarations, not layout, code syntax or drawings. */
+@media (prefers-color-scheme: dark) {
+html,body,main,main.canvas{background:#212121!important;color:#ececec!important;color-scheme:dark!important}
+:root{--bg:#212121;--fg:#ececec;--ink:#ececec;--muted:#b4b4b4;--border:#424242;--line:#424242;--soft:#303030;--surface:#303030}
+}
+@media (prefers-color-scheme: light) {
+html,body,main,main.canvas{background:#fff!important;color:#171717!important;color-scheme:light!important}
+:root{--bg:#fff;--fg:#171717;--ink:#171717;--text:#171717;--muted:#626262;--border:#e5e5e5;--line:#e5e5e5;--soft:#f5f5f5;--surface:#f5f5f5;--blue:#2563eb;--green:#16794a;--violet:#6d28d9}
+main .card,main .panel,main .tile{background:#fff!important;color:#171717!important;border-color:#e5e5e5!important}
+main .tile.soft,main .soft{background:#eff6ff!important;color:#1d4ed8!important;border-color:#bfdbfe!important}
+main .tile.green,main .green{color:#16794a!important}main .tile.green{background:#ecfdf5!important;border-color:#bbf7d0!important}
+main .tile.red{background:#fef2f2!important;color:#b91c1c!important;border-color:#fecaca!important}
+main .tile.purple,main .purple{background:#f5f3ff!important;color:#6d28d9!important;border-color:#ddd6fe!important}
+main :is(input,select,textarea){color:#171717!important;background:#f5f5f5!important;border-color:#d6d6d6!important;color-scheme:light!important}
+main .range output,main .label,main small,main .caption{color:#626262!important}
+main a{color:#1d4ed8!important}
+main .bar{background:#e5e5e5!important}
+main button:not(.copy):not(.qcopy){background:#f5f5f5;color:#171717;border-color:#d6d6d6}
+main .controls button.primary{background:#171717;color:#fff;border-color:#171717}
+main .codeblock,main .codebox,main .code,main .terminal{background:#171717!important;color:#ececec!important;border-color:#424242!important}
+main .codehead,main .codebar,main .codebox>.row{background:#303030!important;color:#d1d1d1!important}
+main .codeblock pre,main .codebox pre,main .code pre,main .terminal pre{color:#ececec!important}
+main .codebox .copy,main .codehead .copy,main .codebar .copy{color:#ececec!important;background:transparent!important}
+main .terminal small,main .codeblock small,main .codebox small,main .code small{color:#b4b4b4!important}
+main .recovered-visual{background:#1c1c1c!important;color:#f5f5f5!important;--ink:#ececec;--fg:#ececec;--text:#ececec;--muted:#b4b4b4}
+main .recovered-visual :is(p,small,.caption){color:#ececec!important}
+main .recovered-visual a{color:#93c5fd!important}
+}
+</style>
 </head><body><main><h1>Stage 013 — Answer Generation</h1><small>D01 07:39 onwards · Extracting and displaying the LLM answer</small><p>GitHub లో Stage 012 వరకు ఉన్న source code, 458 timestamp actions verify చేశాను. ఇప్పటివరకు మన application LLM కి augmented prompt పంపించి response object తీసుకుంటుంది. కానీ terminal లో response status మాత్రమే చూపిస్తుంది.</p><div class="codebox"><div class="codehead"><span>text</span><button class="copy" type="button">Copy</button></div><pre><code>LLM response status: completed</code></pre></div><p>User కి కావాల్సింది status కాదు. తన question కి answer. ఈ stage లో response object నుంచి actual generated text extract చేసి, validate చేసి, terminal లో display చేస్తాం.</p><section class="card"><svg class="diagram" viewBox="0 0 340 300" role="img" aria-label="Prompt to answer extraction"><rect x="45" y="5" width="250" height="43" rx="7" stroke="#8b5cf6" fill="#8b5cf6" fill-opacity=".1"/><text x="170" y="22" text-anchor="middle" font-size="12" font-weight="bold">Augmented prompt</text><text x="170" y="37" text-anchor="middle" font-size="10">Question + retrieved context</text><path d="M170 48V66" stroke="currentColor" fill="none" stroke-dasharray="3 3"/><rect x="45" y="67" width="250" height="43" rx="7" stroke="#3b82f6" fill="#3b82f6" fill-opacity=".1"/><text x="170" y="84" text-anchor="middle" font-size="12" font-weight="bold">LLM</text><text x="170" y="99" text-anchor="middle" font-size="10">Generates response</text><path d="M170 110V128" stroke="currentColor" stroke-dasharray="3 3"/><rect x="35" y="129" width="270" height="68" rx="7" stroke="#d97706" fill="#d97706" fill-opacity=".07"/><text x="170" y="147" text-anchor="middle" font-size="11" font-weight="bold">Response object</text><rect x="47" y="157" width="118" height="28" rx="4" fill="#64748b" fill-opacity=".15"/><text x="106" y="174" text-anchor="middle" font-size="10">status</text><rect x="175" y="157" width="118" height="28" rx="4" stroke="#16a34a" fill="#16a34a" fill-opacity=".15"/><text x="234" y="174" text-anchor="middle" font-size="10">output_text</text><path d="M170 197V215" stroke="currentColor" stroke-dasharray="3 3"/><rect x="45" y="216" width="250" height="34" rx="6" stroke="#16a34a" fill="#16a34a" fill-opacity=".1"/><text x="170" y="237" text-anchor="middle" font-size="11">Validate and extract answer</text><path d="M170 250V266" stroke="currentColor" stroke-dasharray="3 3"/><rect x="70" y="267" width="200" height="28" rx="6" stroke="#16a34a" fill="#16a34a" fill-opacity=".15"/><text x="170" y="285" text-anchor="middle" font-size="11" font-weight="bold">Display answer to user</text></svg></section>
 <h2>1. What does the LLM return?</h2><p>OpenAI Responses API ఒక plain string మాత్రమే return చేయదు. Response object లో generated output, status, usage information వంటి fields ఉంటాయి. Python SDK లో output_text అనే helper ద్వారా generated text access చేయవచ్చు.</p><section class="card"><small>ILLUSTRATIVE RESPONSE OBJECT</small><div class="tile row between"><div><b>status</b><br><small>Request completion state</small></div><span class="good">completed</span></div><div class="tile" style="border-color:#16a34a"><b>output_text</b><br><small>Generated answer</small><p>Embeddings are numerical representations of text that encode its meaning.</p></div><div class="tile"><b>usage</b><br><small>Token consumption information</small></div><small>Example data only — not an actual API response.</small></section><p>మనకు ఇప్పుడు ముఖ్యమైనవి status మరియు output_text. Response complete కాకపోతే partial answer ని final answer లాగా చూపించకూడదు. Completed response లో text లేకపోతే కూడా దాన్ని detect చేయాలి.</p>
 <h2>2. Three important scenarios</h2><section class="card restored-visual" data-visual="three-response-scenarios"><div class="visual-tile" style="--accent:#16a34a"><b>✓ Completed response</b><small class="visual-caption">Valid, nonblank output text</small><p>Display the answer.</p></div><div class="visual-tile" style="--accent:#d97706"><b>⚠ Incomplete response</b><small class="visual-caption">Generation did not complete</small><p>Reject the partial answer in our current implementation.</p></div><div class="visual-tile" style="--accent:#ef4444"><b>✕ Empty response</b><small class="visual-caption">No usable answer text</small><p>Display an answer-unavailable message.</p></div></section><h2>Step 1 — Create answer.py</h2><small>D01 07:39</small><p>VS Code project root లో answer.py అనే కొత్త file create చెయ్యి.</p><section class="card"><div class="tree">📂 rag-from-scratch
