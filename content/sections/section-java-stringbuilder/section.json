@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "section",
+  "id": "section-java-stringbuilder",
+  "title": "Visual Lessons",
+  "slug": "visual-lessons",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-java-stringbuilder"
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-java-stringbuilder",
+  "title": "StringBuilder — Recreating the invention",
+  "slug": "java-stringbuilder",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-java-stringbuilder",
+  "section_id": "section-java-stringbuilder",
+  "entrypoint": "index.html",
+  "assets": [],
+  "capabilities": {
+    "network_origins": []
+  }
+}
