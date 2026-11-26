@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "section",
+  "id": "section-ai-engineering",
+  "title": "AI Engineering Fundamentals",
+  "slug": "fundamentals",
+  "order": 1,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-ai-engineering"
+}

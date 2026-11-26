@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-github-actions",
+  "title": "GitHub Actions",
+  "slug": "github-actions",
+  "order": 2,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-developer-tools",
+  "section_id": "section-developer-tools",
+  "entrypoint": "index.html",
+  "assets": [
+    "icon-1.svg",
+    "icon-2.svg",
+    "icon-3.svg",
+    "icon-4.svg",
+    "icon-5.svg",
+    "icon-6.svg",
+    "icon-7.svg",
+    "icon-8.svg",
+    "script-1.js",
+    "rule-27.css",
+    "rule-27.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}
