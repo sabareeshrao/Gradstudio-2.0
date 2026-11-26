@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "simulation",
+  "id": "sim-aws-regions-practical",
+  "title": "AWS Regions — Practical Application Knowledge",
+  "slug": "aws-regions-practical",
+  "order": 6,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-aws",
+  "section_id": "section-aws",
+  "entrypoint": "index.html",
+  "assets": [
+    "checklist.js"
+  ],
+  "capabilities": {
+    "network_origins": []
+  }
+}
