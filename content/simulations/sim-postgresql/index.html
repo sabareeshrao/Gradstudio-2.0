@@ -36,6 +36,16 @@ svg.diagram text,svg.map text,svg.cos-svg text,svg.fidelity-svg text{color:#1720
 
 }
 </style>
+
+<style id="gradstudio-dark-palette">
+/* Pure black page, ChatGPT-style gray cards. Preserve light mode and educational artwork. */
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#000000; --background:#000000; --card:#212121; --panel:#212121; --surface:#2b2b2b; --soft:#2b2b2b; }
+  html,body { background:#000000 !important; }
+  main,main.canvas { background-color:#000000; }
+  main .card:not(.active):not(.selected):not(.correct):not(.incorrect),main .panel:not(.active):not(.selected),main article { background-color:#212121; }
+}
+</style>
 </head><body><main><h1>PostgreSQL</h1><p>PostgreSQL is an open-source <strong>relational database management system (RDBMS)</strong> that stores structured data in tables and allows applications to manage it using SQL.</p>
 <section class="card"><h3>Where PostgreSQL fits</h3><div class="flow center"><div class="tile blue"><strong>User interface</strong><small>React · Angular · Mobile</small></div><div class="arrow">↓</div><div class="tile purple"><strong>Spring Boot API</strong><small>Business logic · Java</small></div><div class="arrow">↓</div><div class="tile blue"><strong>PostgreSQL</strong><small>SQL · Transactions · Storage</small></div><div class="arrow">↓</div><div class="branch"><div class="tile">Customers</div><div class="tile">Orders</div><div class="tile">Products</div></div></div><small>PostgreSQL is the persistent data layer of the application.</small></section>
 <h2>1. Database structure</h2><section class="card"><div class="tree"><strong>▣ PostgreSQL server</strong><div class="nested blue"><strong>Database: ecommerce</strong><div class="nested purple"><strong>Schema: public</strong><div class="nested" style="background:white;color:#334155">▦ customers<br>▦ products<br>▦ orders</div></div></div></div><small>Server → Database → Schema → Tables → Rows and columns</small><div class="line"></div><strong>products table</strong><table><thead><tr><th>id (PK)</th><th>name</th><th>price</th></tr></thead><tbody><tr><td>101</td><td>Laptop</td><td>$999</td></tr><tr><td>102</td><td>Mouse</td><td>$25</td></tr><tr><td>103</td><td>Keyboard</td><td>$75</td></tr></tbody></table><small>Each row is a record. Each column has a defined data type. A primary key uniquely identifies a row.</small></section>

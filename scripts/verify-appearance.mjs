@@ -65,8 +65,7 @@ try{
               const heading=main.querySelector("h1,h2");
               return {bg,rootBg,heading:heading?.textContent?.trim().slice(0,80),marker:window.__appearanceProof};
             });
-            // The GPU idea lesson explicitly uses pure black in dark mode; all other lessons retain the shared palette.
-            const expected=scheme==="dark"?(lesson.id==="sim-gpu-idea-driven"?"rgb(0, 0, 0)":"rgb(33, 33, 33)"):"rgb(255, 255, 255)";
+            const expected=scheme==="dark"?"rgb(0, 0, 0)":"rgb(255, 255, 255)";
             const actual=result.bg==="rgba(0, 0, 0, 0)"?result.rootBg:result.bg;
             assert.equal(actual,expected,label+" "+scheme+" background");
             assert.equal(result.marker,73,label+" "+scheme+" frame state");

@@ -120,6 +120,16 @@ main .recovered-visual :is(p,small,.caption){color:#ececec!important}
 main .recovered-visual a{color:#93c5fd!important}
 }
 </style>
+
+<style id="gradstudio-dark-palette">
+/* Pure black page, ChatGPT-style gray cards. Preserve light mode and educational artwork. */
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#000000; --background:#000000; --card:#212121; --panel:#212121; --surface:#2b2b2b; --soft:#2b2b2b; }
+  html,body { background:#000000 !important; }
+  main,main.canvas { background-color:#000000; }
+  main .card:not(.active):not(.selected):not(.correct):not(.incorrect),main .panel:not(.active):not(.selected),main article { background-color:#212121; }
+}
+</style>
 </head><body style="background:#000;color:#f5f5f5"><main style="background:#000;color:#f5f5f5"><h1>Stage 004 — Text Preprocessing</h1><div class="caption">D01 01:13 onwards · Data preparation</div>
 <p><code>data</code> folder లో ఉన్న మూడు documents ని మన application ఇప్పటివరకు automatically load చేస్తుంది.</p>
 <p>కానీ real-world documents ఎప్పుడూ clean గా ఉండవు. PDFs, websites, company documents నుంచి extract చేసిన text లో unnecessary spaces, tabs, inconsistent line breaks ఉంటాయి.</p>

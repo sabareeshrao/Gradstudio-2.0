@@ -120,6 +120,16 @@ svg.diagram,svg.map,svg.cos-svg,svg.fidelity-svg,article>svg:not(.ico){backgroun
 main .lesson,main .explainer-title,main .card p,main .bottom,main .subtitle strong{color:#171717}main .card{background:#f5f5f5}main .card:nth-child(1) b{color:#006b79}main .card:nth-child(2) b{color:#6d28d9}main .card:nth-child(3) b{color:#16794a}main .bottom strong{color:#a54c00}main .editor,main .terminal{color:#f1f6ff}main .editor .head,main .terminal .head{color:#b4b4b4}main h1 span{background:none;color:#6d28d9}
 }
 </style>
+
+<style id="gradstudio-dark-palette">
+/* Pure black page, ChatGPT-style gray cards. Preserve light mode and educational artwork. */
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#000000; --background:#000000; --card:#212121; --panel:#212121; --surface:#2b2b2b; --soft:#2b2b2b; }
+  html,body { background:#000000 !important; }
+  main,main.canvas { background-color:#000000; }
+  main .card:not(.active):not(.selected):not(.correct):not(.incorrect),main .panel:not(.active):not(.selected),main article { background-color:#212121; }
+}
+</style>
 </head>
 <body>
 <main class="canvas">

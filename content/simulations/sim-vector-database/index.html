@@ -35,6 +35,16 @@ svg.diagram,svg.map,svg.cos-svg,svg.fidelity-svg,article>svg:not(.ico){backgroun
 main button[aria-pressed=true]{background:#f3e8ff;color:#6d28d9;border-color:#a78bfa}main .symbol{background:#f3e8ff;color:#6d28d9}main svg:not(.ico){--text:#ececec;--muted:#b4b4b4}
 }
 </style>
+
+<style id="gradstudio-dark-palette">
+/* Pure black page, ChatGPT-style gray cards. Preserve light mode and educational artwork. */
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#000000; --background:#000000; --card:#212121; --panel:#212121; --surface:#2b2b2b; --soft:#2b2b2b; }
+  html,body { background:#000000 !important; }
+  main,main.canvas { background-color:#000000; }
+  main .card:not(.active):not(.selected):not(.correct):not(.incorrect),main .panel:not(.active):not(.selected),main article { background-color:#212121; }
+}
+</style>
 </head><body><main>
 <h1>Vector Database</h1>
 <p>Vector Database అనేది data లో ఉన్న <strong>meaning (అర్థం)</strong> ఆధారంగా similar information వెతికే database.</p>
