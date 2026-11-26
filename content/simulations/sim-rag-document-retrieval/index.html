@@ -36,7 +36,37 @@ main .progress button{min-height:18px!important}
 <!-- RULE 27: shared compact sizing; original lesson unchanged -->
 <link rel="stylesheet" href="rule-27.css">
 <script defer src="rule-27.js"></script>
-<style id="fidelity-dark-final">html,body,main,main.canvas{background:#000!important;color:#f5f5f5!important;color-scheme:only dark}html{color-scheme:only dark!important}svg.recovered-visual,main .recovered-visual svg{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;overflow:visible!important}main .recovered-visual{background:#1c1c1c!important;color:#f5f5f5!important}main .recovered-visual svg text{font-family:Arial,sans-serif}pre code span.syn-kw{color:#e5a0e7!important}pre code span.syn-str{color:#a5d6a7!important}pre code span.syn-fn{color:#f3c98b!important}pre code span.syn-type{color:#81b9f9!important}pre code span.syn-builtin{color:#93c5fd!important}pre code span.syn-num{color:#f5a97f!important}pre code span.syn-op{color:#c4b5fd!important}pre code span.syn-comment{color:#a3a3a3!important}</style></head><body><main><header><h1>Stage 010 — Document Retrieval</h1><small>D01 05:33 onwards · Relevance filtering & context selection</small></header>
+<style id="fidelity-dark-final">html,body,main,main.canvas{background:#000!important;color:#f5f5f5!important;color-scheme:only dark}html{color-scheme:only dark!important}svg.recovered-visual,main .recovered-visual svg{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;overflow:visible!important}main .recovered-visual{background:#1c1c1c!important;color:#f5f5f5!important}main .recovered-visual svg text{font-family:Arial,sans-serif}pre code span.syn-kw{color:#e5a0e7!important}pre code span.syn-str{color:#a5d6a7!important}pre code span.syn-fn{color:#f3c98b!important}pre code span.syn-type{color:#81b9f9!important}pre code span.syn-builtin{color:#93c5fd!important}pre code span.syn-num{color:#f5a97f!important}pre code span.syn-op{color:#c4b5fd!important}pre code span.syn-comment{color:#a3a3a3!important}</style>
+<style>
+/* GradStudio appearance: adapt reading surfaces; retain original code and illustration colors. */
+@media (prefers-color-scheme: dark) { html,body{color-scheme:dark;background:#212121;color:#ececec} :root{--bg:#212121;--fg:#ececec;--ink:#ececec;--text:#ececec} }
+@media (prefers-color-scheme: light) {
+html,body{color-scheme:light;background:#fff;color:#171717}
+:root{--bg:#fff;--fg:#171717;--ink:#171717;--text:#171717;--muted:#626262;--border:#dedede;--line:#e5e5e5;--surface:#f5f5f5;--soft:#f5f5f5;--blue:#2563eb;--green:#16794a;--violet:#6d28d9}
+main .card,main .panel,main .tile{background:#fff;color:#171717;border-color:#e5e5e5}
+main small,main .caption,main .muted,main .arrow,main .flowlabel,main .steplabel,main .status{color:#626262}
+main .good,main .badge,main .new{color:#16794a}main .bad{color:#b91c1c}main a,main .blue{color:#1d4ed8}main .purple{color:#6d28d9}
+main button:not(.copy):not(.qcopy),main select,main textarea,main input[type=text],main input[type=number]{background:#f5f5f5;color:#171717;border-color:#d6d6d6}
+main .controls button.primary{background:#171717;color:#fff;border-color:#171717}
+main code{background:#f1f1f1}
+main .codeblock,main .codebox,main .code,main .terminal{background:#171717;color:#ececec;border-color:#424242}
+main .codeblock pre,main .codebox pre,main .code pre,main .terminal pre{color:#ececec}
+main .codeblock code,main .codebox code,main .code code,main .terminal code{background:transparent}
+main .codehead,main .codebar{background:#303030;color:#d1d1d1}
+main .codehead .copy,main .codebar .copy,main .codebox .copy{color:#ececec;background:transparent;border:0}
+main .terminal small{color:#a3a3a3}
+main .tree-row.new,main .request-body,main .next{background:#f5f5f5;color:#171717}
+main .progress,main .bar,main .rankbar{background:#e5e5e5}
+main .remove{background:#fef2f2;color:#b91c1c}main .add{background:#ecfdf5;color:#16794a}
+main th,main td,main hr,main .qrow,main .kv{border-color:#e5e5e5}
+main .swagger-row.get b{color:#1d4ed8}main .swagger-row.post b{color:#16794a}
+/* Preserve original dark illustration and terminal palettes independently of reading surface. */
+svg.diagram,svg.fidelity-svg,svg.map,svg.cos-svg{background:#212121;color:#ececec;border-radius:8px;--ink:#ececec;--fg:#ececec;--text:#ececec;--muted:#b4b4b4;--line:#424242;--blue:#93c5fd;--green:#86efac;--violet:#c4b5fd}
+
+
+}
+</style>
+</head><body><main><header><h1>Stage 010 — Document Retrieval</h1><small>D01 05:33 onwards · Relevance filtering & context selection</small></header>
 <p>GitHub లో Stage 009 వరకు ఉన్న source code, 332 timestamp actions verify చేశాను.</p>
 <p>ఇప్పటివరకు మన application user question తీసుకుని, embeddings generate చేసి, Top-3 relevant chunks ని select చేస్తుంది. కానీ ఇక్కడ ఒక సమస్య ఉంది. User మన knowledge base లో లేని question అడిగినా, మన semantic search మూడు chunks ని return చేస్తుంది.</p>
 <p>ఉదాహరణకు మన documents అన్నీ AI గురించి ఉన్నాయి. User ఇలా అడిగాడనుకో:</p><p><b>What is the capital of Japan?</b></p><p>మన search algorithm కి answer తెలియకపోయినా, ఉన్న documents లో highest similarity ఉన్న మూడు chunks ని return చేస్తుంది. ఈ సమస్యను solve చేయడానికి <b>Document Retrieval Layer</b> implement చేద్దాం.</p><div class="wide-grid"><div class="wide-unit">
