@@ -2,12 +2,12 @@
   "schema_version": 1,
   "kind": "section",
   "id": "section-rag-from-scratch",
-  "title": "Build a RAG Application",
+  "title": "Project — Build a RAG Application From Scratch",
   "slug": "build-a-rag-application",
-  "order": 1,
+  "order": 5,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-rag-from-scratch"
+  "course_id": "course-ai-engineering"
 }

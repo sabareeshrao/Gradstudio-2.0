@@ -2,15 +2,15 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-gpu-detailed",
-  "title": "GPU — Detailed Visual Guide",
+  "title": "GPU — Architecture and Visual Guide",
   "slug": "gpu-detailed",
-  "order": 1,
+  "order": 2,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-machine-learning",
-  "section_id": "section-machine-learning",
+  "course_id": "course-ai-engineering",
+  "section_id": "section-gpu-computing",
   "entrypoint": "index.html",
   "assets": [],
   "capabilities": {

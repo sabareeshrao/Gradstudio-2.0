@@ -4,12 +4,12 @@
   "id": "sim-cnn",
   "title": "Convolutional Neural Networks (CNN)",
   "slug": "cnn",
-  "order": 3,
+  "order": 1,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-machine-learning",
+  "course_id": "course-ai-engineering",
   "section_id": "section-machine-learning",
   "entrypoint": "index.html",
   "assets": [

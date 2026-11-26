@@ -2,11 +2,11 @@
   "schema_version": 1,
   "kind": "section",
   "id": "section-generative-ai",
-  "title": "Core Concepts",
-  "slug": "core-concepts",
-  "order": 1,
+  "title": "Generative AI & RAG Fundamentals",
+  "slug": "generative-ai-rag-fundamentals",
+  "order": 4,
   "status": "published",
-  "course_id": "course-generative-ai",
+  "course_id": "course-ai-engineering",
   "access": {
     "display": "open"
   }

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "section",
+  "id": "section-gpu-computing",
+  "title": "GPU & AI Computing",
+  "slug": "gpu-computing",
+  "order": 2,
+  "status": "published",
+  "access": {
+    "display": "open"
+  },
+  "course_id": "course-ai-engineering"
+}

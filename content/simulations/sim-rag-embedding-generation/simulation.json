@@ -2,14 +2,14 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-rag-embedding-generation",
-  "title": "Embedding Generation",
+  "title": "06. Generate Embeddings",
   "slug": "rag-embedding-generation",
   "order": 6,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-rag-from-scratch",
+  "course_id": "course-ai-engineering",
   "section_id": "section-rag-from-scratch",
   "entrypoint": "index.html",
   "assets": [

@@ -4,9 +4,9 @@
   "id": "sim-transformer",
   "title": "Transformer Architecture",
   "slug": "transformer",
-  "order": 2,
+  "order": 1,
   "status": "published",
-  "course_id": "course-generative-ai",
+  "course_id": "course-ai-engineering",
   "section_id": "section-generative-ai",
   "access": {
     "display": "open"

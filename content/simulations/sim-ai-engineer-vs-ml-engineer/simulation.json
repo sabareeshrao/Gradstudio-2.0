@@ -2,9 +2,9 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-ai-engineer-vs-ml-engineer",
-  "title": "AI Engineer vs ML Engineer",
+  "title": "AI Engineer vs. ML Engineer vs. AI Researcher",
   "slug": "ai-engineer-vs-ml-engineer",
-  "order": 3,
+  "order": 4,
   "status": "published",
   "access": {
     "display": "open"

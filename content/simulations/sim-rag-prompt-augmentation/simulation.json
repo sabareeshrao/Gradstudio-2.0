@@ -2,14 +2,14 @@
   "schema_version": 1,
   "kind": "simulation",
   "id": "sim-rag-prompt-augmentation",
-  "title": "Prompt Augmentation",
+  "title": "11. Augment the Prompt",
   "slug": "rag-prompt-augmentation",
   "order": 11,
   "status": "published",
   "access": {
     "display": "open"
   },
-  "course_id": "course-rag-from-scratch",
+  "course_id": "course-ai-engineering",
   "section_id": "section-rag-from-scratch",
   "entrypoint": "index.html",
   "assets": [
